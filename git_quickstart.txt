@@ -1,0 +1,27 @@
+Git QUICKSTART
+
+Hello, in order to get your local repository up, clone this repository by using
+'git clone /home/students/stahl/os/project/git'
+
+Then use
+'git branch YOURNAME_dev' and
+'git checkout YOURNAME_dev'
+to create your branch and check it out (switch to it)
+
+Set your local devlopment branch to track your development branch on the origin:
+'git branch --set-upstream-to=origin/<branch>'
+Where <branch> is YOURNAME_dev. I already created branches on the origin named:
+kueny_dev
+rahman_dev 
+
+Then, just work like normal. When you've made changes, use
+'git add <file>'
+to add it to the staging area.
+
+Use
+'git commit'
+to commit your changes in the staging area to your branch.
+
+Use
+'git push'
+while in your branch to push your changes to your development branch on the origin, so we can all review it.
