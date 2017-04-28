@@ -5,31 +5,25 @@
  * File: directory.h
  * Defines a directory system
  *
- * Implementation: files stored in unordered_set and accessed through hash function.
- * Doubly linked list of files also implemented.
+ * Implementation: files stored in linear list and accessed via hash 
+ * function.
  */
 
 #include <iostream>
-#include <unordered_set>
+#include <vector>
 using namespace std;
 
-/* nodes to represent files */
-struct node
+struct node 
 {
 	// name of file
 	string file_name;
-	
-	// size in blocks
+
+	// first block in the file
+	DiskBlockType * start;
+
+	// size of file in blocks
 	int size;
-
-	// pointer to first block
-	DiskBlockType * file;
-	
-	// pointers to other list elements
-	node * next;
-	node * prev;
-
-};
+}
 
 /* hash functionality */
 struct node_hasher
@@ -47,18 +41,17 @@ class directory
 	public:
 		// constructors
 		directory();
+		directory(DiskProcessType);
 
 		// accessors
-		node * get_head();
-		
-		node * get_current();
+		void list();
 
 		// mutators
 		void add_file(string, int, DiskBlockType & *);
 		
+		// init
+		void init;
 		
 	private:
-		unordered_set<node, node_hasher> nodes;
-		node * head;
-		node * current;
+		vector<node> files;
 };

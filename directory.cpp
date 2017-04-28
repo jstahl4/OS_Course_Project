@@ -16,19 +16,18 @@
 // constructors
 directory::directory()
 {
-	head = new node;
-	current = head;
+
+}
+
+directory::directory(DiskProcessType process)
+{
+	
 }
 
 // accessors
-node * get_head()
+string directory::get_file_name()
 {
-	return head;
-}
-
-node * get_current()
-{
-	return current;
+	return file_name;
 }
 
 // mutators
