@@ -17,9 +17,9 @@ public:
     ~File();
 
     // accessors
-    string get_name();
-    int get_size();
-    char * get_data();
+    string get_name() const;
+    int get_size() const;
+    char * get_data() const;
 
     // mutators
     void set_data(char*);

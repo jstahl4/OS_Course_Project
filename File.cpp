@@ -26,15 +26,15 @@ File::~File()
 }
 
 // accessors
-string File::get_name()
+string File::get_name() const
 {
 	return name;
 }
-int File::get_size()
+int File::get_size() const
 {
 	return size;
 }
-char * File::get_data()
+char * File::get_data() const
 {
 	return data;
 }
