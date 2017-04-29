@@ -1,0 +1,14 @@
+DIR
+	return list - directory
+	return file size - file system
+
+CREATE filename
+	pass filename to directory
+	
+
+start the filesystem
+	starts diskprocess
+start the directory
+	uses File objects from filesystem
+start the ui
+	uses both filesystem and directory

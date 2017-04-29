@@ -1,6 +1,6 @@
 /*
 Tom Kueny
-	+ James Stahl
+James Stahl
 */
 #include <iostream>
 class File{
@@ -15,7 +15,12 @@ public:
 
     // mutators
     void set_data(char*);
-    
+    void set_size(int);
+    static void set_block_size(int);
+    void set_name(string);
+
+    // calculators
+    void calculate_size();
 
 private:
     static int block_size;
