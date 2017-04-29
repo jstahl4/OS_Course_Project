@@ -19,30 +19,58 @@ directory::directory()
 
 }
 
-directory::directory(DiskProcessType process)
+directory::directory(unsorted_list<File, file_hasher> f)
 {
-	
+	// make deep copy
+	for(const auto & file: f)
+	{
+		files.insert(file);
+	}
 }
 
-// accessors
-string directory::get_file_name()
+// accessors/display functions
+void directory::display_list()
 {
-	return file_name;
+	for(const auto & f: files)
+	{
+		cout << f.get_name << endl;
+	}
+}
+
+unsorted_list<File, file_hasher> directory::get_file_list()
+{
+	return files;
+}
+
+string * directory::get_file_name_list()
+{
+	string * names = new string[files.size()];
+	int index = 0;
+
+	for(const auto & f: files)
+	{
+		names[index++] = f;
+	}
+
+	return names;
+}
+
+// destructor
+directory::~directory()
+{
+	delete files;
 }
 
 // mutators
-void directory::add_file(string f, int s, DiskBlockType & * block)
+void directory::add_file(File f)
 {
-	// create new node, add it to the list, then switch to new node
-	current->next = new node;
-	current->next->prev = current;
-	current = current->next;
-
-	// set values in current node
-	current->file_name = f;
-	current->size = s;
-	current->file = block;
-
-	// add current node to unordered_set (for easy access via hashing)
-	nodes.insert(*current);
+	files.insert(f);
+}
+void directory::remove_file(string f)
+{
+	files.erase(f);
+}
+void directory::remove_file(File f)
+{
+	files.erase(f.get_name());
 }

@@ -2,11 +2,17 @@
 Tom Kueny
 James Stahl
 */
+
+#ifndef FILE_H
+#define FILE_H
 #include <iostream>
 class File{
 public:
     File(std::string fileName);
     File(std::string fileName, int blockSize, char* buffer = NULL);
+
+    // destructor
+    ~File();
 
     // accessors
     string get_name();
@@ -28,3 +34,4 @@ private:
     std::string name;
     int size;
 };
+#endif

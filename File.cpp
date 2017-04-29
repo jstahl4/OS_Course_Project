@@ -17,6 +17,12 @@ File::File(std::string fileName, int blockSize, char* buffer = NULL){
 	name=fileName;
 }
 
+// destructor
+File::~File()
+{
+	delete data;
+}
+
 // accessors
 string File::get_name()
 {
