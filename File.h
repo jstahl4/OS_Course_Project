@@ -13,12 +13,16 @@ public:
     File(std::string fileName);
     File(std::string fileName, int blockSize, char* buffer = NULL);
 
+    // operator overload
+    bool operator==(File &) const;
+    
     // destructor
     ~File();
 
     // accessors
     string get_name() const;
     int get_size() const;
+    int get_block_size() const;
     char * get_data() const;
 
     // mutators

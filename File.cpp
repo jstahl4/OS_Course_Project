@@ -19,6 +19,13 @@ File::File(std::string fileName, int blockSize, char* buffer){
 	calculate_size();
 }
 
+// operator overload
+bool File::operator==(File &right) const
+{
+	// File objects are considered equivalent if they share a name
+	return right.name == name;
+}
+
 // destructor
 File::~File()
 {
@@ -33,6 +40,10 @@ string File::get_name() const
 int File::get_size() const
 {
 	return size;
+}
+int File::get_block_size() const
+{
+	return block_size;
 }
 char * File::get_data() const
 {
