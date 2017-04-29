@@ -2,7 +2,7 @@
  * James Stahl - Team Coyote
  **********************************************************************
 
- * File: directory.h
+ * File: Directory.h
  * Defines a directory system
  *
  * Implementation: files stored in unsorted_list, as the order does not matter.
@@ -12,7 +12,7 @@
 #ifndef DIRECTORY_H
 #define DIRECTORY_H
 #include <iostream>
-#include <unordered_list>
+#include <unordered_set>
 #include "File.h"
 using namespace std;
 
@@ -27,19 +27,18 @@ struct file_hasher
 	}
 };
 
-class directory
+class Directory
 {
 	public:
 		// constructors
-		directory();
-		directory(unsorted_list<File, file_hasher>);
+		Directory();
 
 		// destructor
-		~directory();
+		~Directory();
 
 		// accessors/display functions
 		void display_list();
-		unsorted_list<File, file_hasher> get_file_list();
+		unordered_set<File, file_hasher> get_file_list();
 		string * get_file_name_list();
 
 		// mutators
@@ -48,6 +47,6 @@ class directory
 		void remove_file(File);
 		
 	private:
-		unsorted_list<File, file_hasher> files;
+		unordered_set<File, file_hasher> files;
 };
 #endif
