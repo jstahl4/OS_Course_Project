@@ -1,4 +1,4 @@
-#include "file.h"
+#include "File.h"
 #define DEFAULT_BLOCK_SIZE 10
 
 // set size of 1 char in bytes (i.e. if CHAR_SIZE is 1, then 1 char = 1 byte)
@@ -8,13 +8,15 @@ int File::block_size = DEFAULT_BLOCK_SIZE;
 
 File::File(std::string fileName){
 	data=NULL;
-	size=0;
+	block_size= DEFAULT_BLOCK_SIZE;
 	name = fileName;
+	calculate_size();
 }
-File::File(std::string fileName, int blockSize, char* buffer = NULL){
+File::File(std::string fileName, int blockSize, char* buffer){
 	data=buffer;
-	size=blockSize;
+	block_size=blockSize;
 	name=fileName;
+	calculate_size();
 }
 
 // destructor
@@ -46,7 +48,7 @@ void File::set_size(int s)
 {
 	size = s;
 }
-static void File:::set_block_size(int s)
+void File::set_block_size(int s)
 {
 	block_size = s;
 }
