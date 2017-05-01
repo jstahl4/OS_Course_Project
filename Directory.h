@@ -45,7 +45,8 @@ class Directory
 		void add_file(File);
 		void remove_file(string);
 		void remove_file(File);
-		
+		//TODO: error handling for files that don't exist yet for remove, those that already do for add?
+
 	private:
 		unordered_set<File, file_hasher> files;
 };

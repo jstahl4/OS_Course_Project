@@ -15,7 +15,7 @@ public:
 
     // operator overload
     bool operator==(File &) const;
-    
+
     // destructor
     ~File();
 
@@ -23,12 +23,14 @@ public:
     string get_name() const;
     int get_size() const;
     int get_block_size() const;
+    int get_starting_block() const; //tell disk where file is located
     char * get_data() const;
 
     // mutators
     void set_data(char*);
     void set_size(int);
     void set_block_size(int);
+    void set_starting_block(int); //set first block location of file
     void set_name(string);
 
     // calculators
@@ -36,6 +38,7 @@ public:
 
 private:
     static int block_size;
+    int starting_block;
     char* data;
     std::string name;
     int size;

@@ -1,3 +1,7 @@
+/*
+Lead Author: James Stahl
+Additional Authors: Tom Kueny
+*/
 #include "File.h"
 #define DEFAULT_BLOCK_SIZE 10
 
@@ -49,6 +53,10 @@ char * File::get_data() const
 {
 	return data;
 }
+int File::get_starting_block() const
+{
+	return starting_block;
+}
 
 // mutators
 void File::set_data(char * d)
@@ -67,7 +75,10 @@ void File::set_name(string n)
 {
 	name = n;
 }
-
+void File::set_starting_block(int b)
+{
+	starting_block = b;
+}
 // calculators
 
 /* calculates size in blocks and sets size accordingly */
@@ -76,7 +87,7 @@ void File::calculate_size()
 	// determine size of data in bytes
 	string d = data;
 	int bytes = CHAR_SIZE * d.length();
-	
+
 	// determine size of data in blocks
 	int blocks = bytes / block_size;
 
