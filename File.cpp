@@ -22,6 +22,13 @@ File::File(std::string fileName, int blockSize, char* buffer){
 	name=fileName;
 	calculate_size();
 }
+File::File(File &obj)
+{
+	data = obj.data;
+	block_size = obj.block_size;
+	name = obj.name;
+	calculate_size();
+}
 
 // operator overload
 bool File::operator==(File &right) const

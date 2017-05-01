@@ -12,6 +12,8 @@ class File{
 public:
     File(std::string fileName);
     File(std::string fileName, int blockSize, char* buffer = NULL);
+    //copy constructor
+    File(File& obj);
 
     // operator overload
     bool operator==(File &) const;

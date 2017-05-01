@@ -102,10 +102,10 @@ namespace ATOS_API
 			return 0;
 	}
 	int		Write(File &obj, int numchards, char const* newBuffer){
-			//write input
-			obj.buffer += newBuffer;
-			//save input to file
-			//write file to DISK
+			obj.set_data(newBuffer); //TODO: append data?
+			obj.set_size(ceil(numchards/Disk::blockSize);
+			int offset;
+			WriteDisk(offset, newBuffer);
 			return numchards;
 	}
 

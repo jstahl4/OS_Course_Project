@@ -38,7 +38,7 @@ class Directory
 
 		// accessors/display functions
 		void display_list();
-		unordered_set<File, file_hasher> get_file_list();
+		unordered_set<File, file_hasher> get_file_list(); //
 		string * get_file_name_list();
 
 		// mutators

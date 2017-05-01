@@ -14,13 +14,21 @@ namespace DISK_API{
     public:
         int blockSize;
         char* data;
+        bool isWrittenTo;
         BlockType(int blcksize){
             blockSize = blcksize;
+            isWrittenTo = false;
             data = new char[blcksize];
             for(int i = 0; i < blcksize; i++)
                 data[i] = '.';
         }
         ~BlockType(){ delete data; };
+        void blockWrite(){
+            isWrittenTo = true;
+        }
+        void blockErase(){
+            isWrittenTo = false;
+        }
     };
     class Disk{
     private:
@@ -142,6 +150,20 @@ namespace DISK_API{
                 << 100*float(numCreated)/float(numBlocks)<<" %\n";
 
             return;
+        }
+        bool needsCompaction(unordered_set<File, file_hasher> fileList){
+            //TODO: iterate through list, if numblocks created > numblocks taken by files
+            //return true, else false
+        }
+        void compaction(){
+            //locate first free block
+            //assert a file exists after this block
+            //find next file
+            //create new file object as a copy
+            //deallocate blocks aka block->data == NULL
+            //find aforementioned lowest block
+            //write copied file with that block as the offset
+            //repeat until contiguous space is compacted
         }
 
     };
