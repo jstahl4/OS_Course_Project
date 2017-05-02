@@ -1,6 +1,7 @@
 /**********************************************************************
  * Asif Rahman - Team Coyote
  **********************************************************************/
+
 #include "UI.h"
 #include <iostream>
 #include <sstream>
@@ -9,15 +10,16 @@
 
 // Construct UI class.
 UI::UI()
-	: m_FileHandle(INVALID_ATOS_HANDLE_VALUE) // invalid handle
+	: m_FileHandle(INVALID_ATOS_HANDLE_VALUE) // Initialize the file handle with invalid handle value
 {
-	// Convert Commands words to enum
+	// Convert Commands words to enum. Increase efficiency.
 	m_Commands[Commands::Create] = "CREATE";
 	m_Commands[Commands::Delete] = "DELETE";
 	m_Commands[Commands::Dir] = "DIR";
 	m_Commands[Commands::Edit] = "EDIT";
 	m_Commands[Commands::Type] = "TYPE";
 	m_Commands[Commands::Exit] = "EXIT";
+	m_Commands[Commands::TestIt] = "TESTIT";
 }
 
 // Destruct UI class.
@@ -28,14 +30,14 @@ UI::~UI()
 
 int UI::run()
 {
-	for (;;)									// forever
+	for (;;)							// run forever - if not type EXIT
 	{
 		std::cout << "$$";
 		std::string line;
-		std::cin.clear();						// Clear std::cin (CTRL+Z/CTRL+D)
-		std::getline(std::cin, line);			// read line from cin
+		std::cin.clear();					// Clear std::cin (CTRL+Z/CTRL+D)
+		std::getline(std::cin, line);				// read line from cin
 
-		Commands o = getCommand(line);			// parse command from the line and processing it.
+		Commands o = getCommand(line);				// parse command from the line and processing it.
 		switch (o)
 		{
 		case Commands::Unknown:
@@ -43,24 +45,27 @@ int UI::run()
 				std::cout << "$$Unknown command" << std::endl;
 			break;
 		case Commands::Create:
-			createFile(line);
+			createFile(line);				// Create file
 			break;
-		case Commands::Delete:
+		case Commands::Delete:					// Delete file
 			deleteFile(line);
 			break;
-		case Commands::Dir:
+		case Commands::Dir:					// List the directory content
 			dir();
 			break;
-		case Commands::Edit:
+		case Commands::Edit:					// Edit file
 			editFile(line);
 			break;
-		case Commands::Type:
+		case Commands::Type:					// Show the content of the selected file
 			typeFile(line);
 			break;
+		case Commands::TestIt:					// Test all ATOS-FS API function
+			testIt();
+			break;
 		case Commands::Exit:
-			return 0;							// Exit, no error.
+			return 0;					// Exit, no error.
 		default:
-			return -1;							// Fatal error, exit with error.
+			return -1;					// Fatal error, exit with error.
 		}
 
 	}
@@ -92,13 +97,13 @@ void UI::createFile(std::string const& aLine)
 		std::cout << "$$Invalid command." << std::endl;
 		return;
 	}
-	if (cmd.size() != 2)									// One parameter is required.
+	if (cmd.size() != 2)							// One parameter is required.
 	{
 		std::cout << "$$Invalid arguments." << std::endl;
 		return;
 	}
 
-	if (ATOS_API::Create(cmd[1]))						// Call ATOS create file API
+	if (ATOS_API::Create(cmd[1]))						// Call ATOS-FS create file API
 	{
 		// API call succeeded.
 		std::cout << "$$" << cmd[1] << " file created." << std::endl;
@@ -120,13 +125,13 @@ void UI::deleteFile(std::string const& aLine)
 		std::cout << "$$Invalid command." << std::endl;
 		return;
 	}
-	if (cmd.size() != 2)									// One parameter is required.
+	if (cmd.size() != 2)							// One parameter is required.
 	{
 		std::cout << "$$Invalid arguments." << std::endl;
 		return;
 	}
 
-	if (ATOS_API::Delete(cmd[1]))						// Call ATOS Delete file API
+	if (ATOS_API::Delete(cmd[1]))						// Call ATOS-FS Delete file API
 	{
 		// API call succeeded.
 		std::cout << "$$" << cmd[1] << " file deleted." << std::endl;
@@ -143,12 +148,12 @@ void UI::editFile(std::string const& aLine)
 {
 	// parsing the command.
 	std::vector<std::string> cmd = parseLine(aLine);
-	if (cmd[0] != m_Commands[Commands::Edit])				// Command shall be create.
+	if (cmd[0] != m_Commands[Commands::Edit])				// Command shall be CREATE.
 	{
 		std::cout << "$$Invalid command." << std::endl;
 		return;
 	}
-	if (cmd.size() != 2)									// One parameter is required.
+	if (cmd.size() != 2)							// One parameter is required.
 	{
 		std::cout << "$$Invalid arguments." << std::endl;
 		return;
@@ -157,16 +162,16 @@ void UI::editFile(std::string const& aLine)
 	int handle = ATOS_API::Open(cmd[1]);					// open file
 	if (handle == INVALID_ATOS_HANDLE_VALUE)
 	{
-		std::cout << "$$ failed to open " << cmd[0] << " file";	// failed to open file
+		std::cout << "$$failed to open " << cmd[0] << " file";		// failed to open file
 		return;
 	}
 
 	std::string line;
 	while (std::getline(std::cin, line))					// Read line while not CTRL+D
 	{
-		if (ATOS_API::Write(handle, line.size(), line.c_str()) != line.size())
+		if (ATOS_API::Write(handle, line.size()+1, line.c_str()) != line.size()+1) // +1 for ASCIIZ, test required!
 		{
-			std::cout << "Failed to wite data data to file." << std::endl;
+			std::cout << "$$Failed to wite data data to file." << std::endl;
 			break;
 		}
 	}
@@ -193,7 +198,6 @@ void UI::typeFile(std::string const& aLine)
 		std::cout << "$$Invalid command." << std::endl;
 		return;
 	}
-	}
 	if (cmd.size() != 2)									// One parameter is required.
 	{
 		std::cout << "$$Invalid arguments." << std::endl;
@@ -203,12 +207,12 @@ void UI::typeFile(std::string const& aLine)
 	int handle = ATOS_API::Open(cmd[1]);					// open file
 	if (handle == INVALID_ATOS_HANDLE_VALUE)
 	{
-		std::cout << "$$ failed to open " << cmd[0] << " file";	// failed to open file
+		std::cout << "$$failed to open " << cmd[0] << " file";	// failed to open file
 		return;
 	}
 
-	char buff[255];
-	while (ATOS_API::Read(handle, sizeof(buff), buff ) > 0)
+	char buff;
+	while (ATOS_API::Read(handle, sizeof(buff), &buff ) > 0)
 	{
 		std::cout << buff;
 	}
@@ -228,12 +232,59 @@ void UI::typeFile(std::string const& aLine)
 // print the directory list.
 void UI::dir() const
 {
-	std::vector<std::string> l = ATOS_API::List();									// Get the directory list.
+	uint64_t sum = 0;						// Total used space.
+	std::vector<std::string> l = ATOS_API::List();									// Get the directory list from ATOS-FS.
 	std::cout << "\tATOS-FS Directory Listing." << std::endl;						// Directory content header
 	std::cout << "\tFILENAME\t\t\tSIZE(blks)" << std::endl;
 	for (auto const& iT : l)
 	{
-		std::cout << "\t" << iT << "\t\t\t" << ATOS_API::Stats(iT) << std::endl;	// Rows.
+		std::cout << "\t" << iT << "\t\t\t" << ATOS_API::Stats(iT) << std::endl;	// print rows.
+		sum += ATOS_API::Stats(iT);							// Accumulate the size of the files.
+	}
+	std::cout << "\tFREE SPACE " << ATOS_API::TotalDiskSize() - sum << " blks" << std::endl;
+}
+
+// Test it all ATOS-FS function.
+void UI::testIt() const
+{
+	if (!ATOS_API::Create("ASD1") )			// Try to create ASD1 file
+	{
+		std::cout << "$$Failed to create ASD1 file" << std::endl;
+	}
+	int handle = ATOS_API::Open("ASD1"); 		// Open ASD1 file
+	if (handle == INVALID_ATOS_HANDLE_VALUE) 	// Check the result of the Open ATOS-FS API call
+	{
+		std::cout << "$$Failed to open ASD1 file." << std::endl; // Failed to open ASD1 file
+	}
+	else
+	{
+		int cnt = ATOS_API::Write(handle, sizeof("Something"), "Something"); // Write "Something" in ASCIIZ to ASD1 file
+		std::cout << "$$" << cnt << " bytes written. (-1 is error)" << std::endl;
+		ATOS_API::Close(handle);		// Close the file handle
+
+		handle = ATOS_API::Open("ASD1");	// Open ASD1 file (seek 0!!!)
+		if (handle == INVALID_ATOS_HANDLE_VALUE)// Check the result of the Open ATOS-FS API call
+		{
+			std::cout << "$$Failed to open ASD1 file" << std::endl; // Failed to open ASD1 file
+		}
+		else
+		{
+			char buff;
+			while (ATOS_API::Read(handle, sizeof(buff), &buff ) > 0) // Read contents from ASD1 file
+			{
+				std::cout << buff;
+			}
+			ATOS_API::Close(handle); 	// Close the file handle
+		}
+		dir();					// print the directory structure.
+	}
+	if (ATOS_API::Delete("ASD1"))			// Try to delete the ASD1 file
+	{
+		std::cout << "$$ASD1 file successfuly deleted." << std::endl;
+	}
+	else
+	{
+		std::cout << "$$Failed to delete ASD1 file." << std::endl;
 	}
 }
 
