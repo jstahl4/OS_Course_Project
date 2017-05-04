@@ -14,7 +14,7 @@ File::File(std::string fileName){
 	data=NULL;
 	block_size= DEFAULT_BLOCK_SIZE;
 	name = fileName;
-	calculate_size();
+	// calculate_size();
 }
 File::File(std::string fileName, int blockSize, char* buffer){
 	data=buffer;

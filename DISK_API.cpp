@@ -249,9 +249,13 @@ using namespace std;
             }
         }
 
-    bool  Create(std::string const& aFileName, int fileSize) {
-			  File newFile(aFileName, fileSize);
-			  directory.add_file(newFile); //add file to set, no size = no writing, yet
+    bool  Create(std::string const& aFileName, int fileSize = 0) {
+              cout << "1\n";
+			  File newFile(aFileName);
+              cout << "2\n";
+			  directory.add_file(newFile);
+              cout << "3\n";
+              return true; //add file to set, no size = no writing, yet
 	}
 	bool	Delete(std::string const& aFileName) {
 
@@ -325,5 +329,10 @@ using namespace std;
 
 int main(){
     Disk d(10,10);
+    string fileName = "TESTFILE.txt";
     cout << "Disk successfully created \n";
-}
+    cout << "Creating file named " << fileName << " ...\n";
+    d.Create(fileName);
+    File newFile = d.Open(fileName);
+    cout << "File named " << newFile.get_name() << " was successfully created.\n";
+ }
