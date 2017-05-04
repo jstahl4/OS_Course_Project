@@ -316,6 +316,7 @@ using namespace std;
 			char* fileBuffer = obj.get_data();
 			//counter for buffer
 			static int fileBufferIndex = 0;
+            int starter = obj.get_starting_block();
 			for(int x = 0; x < obj.get_block_size(); x++)
 			{
                 BlockType* newBlock = new BlockType();
@@ -323,7 +324,8 @@ using namespace std;
 					newBlock->data[y] = fileBuffer[fileBufferIndex];
 					fileBufferIndex++;
 				}
-				WriteDisk(obj.get_starting_block() + x, newBlock);
+				WriteDisk(starter, newBlock);
+                starter++;
 			}
 			return numchards;
 	}
