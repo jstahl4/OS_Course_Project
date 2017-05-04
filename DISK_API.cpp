@@ -59,7 +59,7 @@ using namespace std;
             enableLogging("logfile.txt");
         	blockSize = blcksize;
             numBlocks = blocknum;
-            BlockType* block;
+            BlockType* block = new BlockType();
             numCreated=numReads=numWrites=currentBlock=0;
             for(int i = 0; i < numBlocks; i++)
                 disk.push_back(block);
@@ -92,8 +92,12 @@ using namespace std;
             return logging;
         }
         bool WriteDisk(int offset, BlockType* buffer){
+
+
             if (offset<0 || offset>=numBlocks) {
               cerr<<"DISK: Block number is outside bounds\n";
+
+                
               return -1;
             }
             if (buffer->blockSize != blockSize) {
@@ -154,11 +158,11 @@ using namespace std;
             int available = 0;
             int curr_max_available = 0;
             for(int i=0; i < numBlocks; i++){
-                if (disk[i]->data == NULL)
+                if (disk[i]->data == "")
                     curr_max_available++;
                 if(curr_max_available > available)
                     available = curr_max_available;
-                if(disk[i]->data != NULL)
+                if(disk[i]->data != "")
                     curr_max_available = 0;
             }
             return available;
@@ -305,8 +309,10 @@ using namespace std;
 			//check to see if there's enough room on the disk
 			int avail = availableContiguousBlocks(obj.get_block_size());
 			//if enough space, set a starting block
-            int startingBlock = SENTINEL;    // initialized to SENTINEL in case no blocks available
-			if(avail >= numberofBlocks){
+            int startingBlock;// = SENTINEL;    // initialized to SENTINEL in case no blocks available
+
+
+        if(avail >= numberofBlocks){
 				startingBlock =  availableContiguousBlocksStartBlock(obj.get_block_size());
 			}
 			obj.set_starting_block(startingBlock);
@@ -324,7 +330,7 @@ using namespace std;
 					newBlock->data[y] = fileBuffer[fileBufferIndex];
 					fileBufferIndex++;
 				}
-				WriteDisk(starter, newBlock);
+				WriteDisk(0, newBlock);
                 starter++;
 			}
 			return numchards;
