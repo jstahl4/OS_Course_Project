@@ -23,11 +23,11 @@ void Directory::display_list()
 {
 	for(const auto & f: files)
 	{
-		cout << f.get_name << endl;
+		cout << f.get_name() << endl;
 	}
 }
 
-unsorted_set<File, file_hasher> Directory::get_file_list()
+unordered_set<File, file_hasher, file_comparator> Directory::get_file_list()
 {
 	return files;
 }
@@ -39,19 +39,30 @@ string * Directory::get_file_name_list()
 
 	for(const auto & f: files)
 	{
-		names[index++] = f;
+		names[index++] = f.get_name();
 	}
 
 	return names;
 }
 
-File & get_File(string name)
+File Directory::get_File(string name)
 {
-	unordered_set<File>::iterator found = files.find(name);
 
+	unordered_set<File, file_hasher, file_comparator>::iterator found = files.find(name);
 	return *found;
-}
 
+
+	// note: possibly delete below, from previous implementation
+
+	/*
+	// found is an iterator, so if it is dereferenced, the address of the element can be
+	// obtained by using the & operator
+	//
+	// the goal is to return a pointer to the actual File object in the unordered_set, so
+	// it can be modified
+	File * file = &(*found);
+	*/
+}	
 // destructor
 Directory::~Directory()
 {

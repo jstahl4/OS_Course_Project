@@ -16,16 +16,30 @@
 #include "File.h"
 using namespace std;
 
-/* hash functionality */
+/* begin hash functionality methods */
+
+// hash File objects based on name
 struct file_hasher
 {
 	// overload operator (), so this can be called as a function
-	size_t operator()(const File & f) const
+	bool operator()(const File & f) const
 	{
 		// returns an unsigned int using stl-provided hash function
 		return hash<string>()(f.get_name());
 	}
 };
+
+// compare File objects based on name
+struct file_comparator
+{
+	size_t operator()(const File & left, const File & right) const
+	{
+		// returns true if Files have same name
+		return left.get_name() == right.get_name();
+	}
+};
+
+/* end hash functionality methods */
 
 class Directory
 {
@@ -38,17 +52,16 @@ class Directory
 
 		// accessors/display functions
 		void display_list();
-		unordered_set<File, file_hasher> get_file_list();
+		unordered_set<File, file_hasher, file_comparator> get_file_list();
 		string * get_file_name_list();
-		File & get_File(string);
+		File  get_File(string);
 
 		// mutators
 		void add_file(File);
 		void remove_file(string);
 		void remove_file(File);
-		//TODO: error handling for files that don't exist yet for remove, those that already do for add?
 
 	private:
-		unordered_set<File, file_hasher> files;
+		unordered_set<File, file_hasher, file_comparator> files;
 };
 #endif
