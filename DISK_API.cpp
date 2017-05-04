@@ -336,4 +336,8 @@ int main(){
     d.Create(fileName);
     File newFile = d.Open(fileName);
     cout << "File named " << newFile.get_name() << " was successfully created.\n";
+    char* buffer = "Hi I'm writing data to the file.";
+    newFile.set_data(buffer);
+    d.Write(newFile, buffer);
+    cout << newFile.get_name() << " was written to successfully\n";
  }
