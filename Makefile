@@ -1,19 +1,19 @@
 #
 # Makefile for the disk emulator
-# Author: D.M. Lyons
+# Author: D.M. Lyons, Tom Kueny
 # Date: Spring 2017
 #
 # A List of all the source files that should be compiled together
 #
-SOURCES = diskprocess.cpp demo.cpp
+SOURCES = DISK_API.cpp atosAPI.cpp Directory.cpp File.cpp UI.cc main.cc
 #
 # A list of the objects that result from the compilation process
 #
-OBJECTS = diskprocess.o demo.o
+OBJECTS = DISK_API.o atosAPI.o Directory.o File.o UI.o main.o
 #
 # A list of include files on which theh compilation depends
 #
-DEFS = diskprocess.h
+DEFS = atosAPI.h UI.h Directory.h File.h
 #
 # What flags to send to the compiler when you compile source files
 #
@@ -24,5 +24,5 @@ LIBFLAGS = -lm
 
 #
 
-demo: $(SOURCES) $(DEFS)
-	g++ $(CPPFLAGS) $(SOURCES) -o demo $(LIBFLAGS)
+atos: $(SOURCES) $(DEFS)
+	g++ $(CPPFLAGS) $(SOURCES) -o atos $(LIBFLAGS)
