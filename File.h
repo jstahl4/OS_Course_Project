@@ -1,7 +1,8 @@
 /*
-Tom Kueny
-James Stahl
-*/
+ * Lead Author: James Stahl
+ * Additional Authors: Tom Kueny
+ * 
+ */
 
 #ifndef FILE_H
 #define FILE_H
