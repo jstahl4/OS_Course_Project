@@ -11,16 +11,28 @@ Additional Authors: Tom Kueny
 int File::block_size = DEFAULT_BLOCK_SIZE;
 
 File::File(std::string fileName){
+	cout << "1\n";
 	data=NULL;
+	cout << "2\n";
 	block_size= DEFAULT_BLOCK_SIZE;
+	cout << "3\n";
 	name = fileName;
+	cout << "4\n";
+	size = 0;
+	cout << "5\n";
+	// calculate_size();
+	cout << "6\n";
+	starting_block = 0;
+	cout << "7\n";
 	// calculate_size();
 }
 File::File(std::string fileName, int blockSize, char* buffer){
 	data=buffer;
 	block_size=blockSize;
 	name=fileName;
+	size = NULL;
 	calculate_size();
+	starting_block = NULL;
 }
 File::File(const File & f)
 {
