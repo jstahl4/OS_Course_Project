@@ -40,6 +40,7 @@ class Directory
 		void display_list();
 		unordered_set<File, file_hasher> get_file_list();
 		string * get_file_name_list();
+		File & get_File(string);
 
 		// mutators
 		void add_file(File);

@@ -45,6 +45,13 @@ string * Directory::get_file_name_list()
 	return names;
 }
 
+File & get_File(string name)
+{
+	unordered_set<File>::iterator found = files.find(name);
+
+	return *found;
+}
+
 // destructor
 Directory::~Directory()
 {
