@@ -105,7 +105,7 @@ namespace ATOS_API
 				ctr++;
 			}
 			//copy file object to an object NOT ON THE DISK
-			File newFile = getFileByIndex(newFileIndex);
+			File newFile = get_File_By_Starting_Block(newFileIndex);
 			//delete object with same name ON THE DISK
 			Delete(newFile.get_name());
 			//write copied file on disk at appropriate index
