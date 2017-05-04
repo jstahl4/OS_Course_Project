@@ -318,7 +318,7 @@ using namespace std;
 			static int fileBufferIndex = 0;
 			for(int x = 0; x < obj.get_block_size(); x++)
 			{
-                BlockType* newBlock;
+                BlockType* newBlock = new BlockType();
 				for(int y = 0; y < blockSize && fileBufferIndex < numchards; y++){
 					newBlock->data[y] = fileBuffer[fileBufferIndex];
 					fileBufferIndex++;
@@ -333,16 +333,16 @@ using namespace std;
     };
 
 int main(){
-    Disk d(10,10);
+    Disk * d = new Disk(10,10);
     string fileName = "TESTFILE.txt";
     cout << "Disk successfully created \n";
     cout << "Creating file named " << fileName << " ...\n";
-    d.Create(fileName);
-    File newFile = d.Open(fileName);
+    d->Create(fileName);
+    File newFile = d->Open(fileName);
     cout << "File named " << newFile.get_name() << " was successfully created.\n";
     char* buffer = (char *) "Hi I'm writing data to the file.";
     newFile.set_data(buffer);
-    d.Write(newFile, buffer);
+    d->Write(newFile, buffer);
     cout << newFile.get_data() << endl;
     cout << newFile.get_name() << " was written to successfully\n";
  }

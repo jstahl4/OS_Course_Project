@@ -45,7 +45,7 @@ bool File::operator==(const File &right) const
 // destructor
 File::~File()
 {
-	delete data;
+	//delete [] data;
 }
 
 // accessors
