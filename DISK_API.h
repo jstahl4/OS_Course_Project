@@ -2,8 +2,8 @@
  File: diskprocess.h
  This include file defines the class for a disk emulation process that
  will serve as the lowest level of a file system.
- There is one class DiskBlockType which defines what a block is, and
- one class DiskProcess that defines the disk and operations on the disk. 
+ There is one class BlockType which defines what a block is, and
+ one class DiskProcess that defines the disk and operations on the disk.
  The constructor can be parameterized by
  the size of the disk blocks and the number of disk blocks on the disk.
  The class provides routines for reading and writing blocks to the disk.
@@ -12,10 +12,10 @@
 
  Author: D.M. Lyons dlyons@fordham.edu
  Most recent revision: Spring 2016
- 
+
  If you use this program or any part of it you need to incude this entire
  comment. No warranty or support implied.
- 
+
  c dmlyons 2012- 2016 Fordham CIS.
 */
 
@@ -27,16 +27,16 @@
 
 // This class define what a bock on a disk is
 
-class DiskBlockType {
+class BlockType {
  public:
   int blockSize;
   char *data;        //pointer to the data on the disk
-  DiskBlockType(int bsize) { // constructor makes the block
+  BlockType(int bsize) { // constructor makes the block
     blockSize=bsize;
     data = new char[bsize];
     for (int i; i<bsize; i++) data[i]='.';
   }
-  ~DiskBlockType(){ // destructor frees the block
+  ~BlockType(){ // destructor frees the block
     delete data;
   }
 };
@@ -44,7 +44,7 @@ class DiskBlockType {
 // this class defines what a disk is and has some member functions for
 // interacting with the disk
 
-class DiskProcessType {
+class Disk {
  private:
   int blockSize;      // the size of a single block on disk
   int numBlocks;      // the number of this on the disk
@@ -54,13 +54,13 @@ class DiskProcessType {
   int currentBlock;   // the block use din last write/write
   bool logging;       // is debug logging enabled
   ofstream logfile;   // the file to log debug info to if logging
-  vector<DiskBlockType*> disk; // this is the data for the disk
+  vector<BlockType*> disk; // this is the data for the disk
 
   bool createBlock(int blockNumber); // ceate a bock where none was before
-  
+
  public:
 
-  DiskProcessType(int bsize, int bnum) {// mke the disk
+  Disk(int bsize, int bnum) {// mke the disk
     blockSize=bsize;
     numBlocks=bnum;
     numCreated=numReads=numWrites=currentBlock=0;
@@ -68,7 +68,7 @@ class DiskProcessType {
       disk.push_back(NULL); // initialize block ptrs
   };
 
-  ~DiskProcessType() { // clean up the disk nicely
+  ~Disk() { // clean up the disk nicely
     for (int i=0; i<numBlocks; i++)
       if (disk[i]!=NULL) // block was used
 	delete disk[i]; // so free it up
@@ -83,14 +83,14 @@ class DiskProcessType {
 
   int getBlockSize() { return blockSize; }
   int getNumBlocks() { return numBlocks; }
-  
+
   // read a block from the disk. Will create the block data
   // if it did not exist yet
-  int read(int bnum, DiskBlockType *buffer);
-  
+  int ReadDisk(int bnum, BlockType *buffer);
+
   // write a block to the disk. Will create the block data
   // if it did not exist yet.
-  int write(int bnum, DiskBlockType *buffer);
+  int WriteDisk(int bnum, BlockType *buffer);
 
   // enable logging for the disk to a named file
   bool enableLogging(string logfileName);
@@ -98,6 +98,9 @@ class DiskProcessType {
   // write out any disk stats collected. Goes to log if logging enabled
   // otherwise no output.
   void writeStats();
+  int availabeContiguousBlocks();
+  int availableContiguousBlocksStartBlock(int blockSize);
+  bool compactionNeeded();
 };
 
 /* END OF FILE */

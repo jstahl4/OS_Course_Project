@@ -22,7 +22,7 @@ namespace ATOS_API
 				}
 				remove_file(aFileName);
 	}
-	File&	Open(std::string const& aFileName {
+	File&	Open(std::string const& aFileName) {
 			return get_File(aFileName);
 	}
 	bool	Close(int ) {

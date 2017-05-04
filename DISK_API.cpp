@@ -5,16 +5,18 @@
 *something to work off of for the ATOS API
 */
 #include <iostream>
+#include <fstream>
 #include <cstdlib>
 #include <vector>
+#include "Directory.h"
+#include "File.h"
 
 using namespace std;
-namespace DISK_API{
     class BlockType{
     public:
         int blockSize;
         char* data;
-        BlockType(int blcksize){
+        BlockType(int blcksize = 10){
             blockSize = blcksize;
             data = new char[blcksize];
             for(int i = 0; i < blcksize; i++)
@@ -31,7 +33,8 @@ namespace DISK_API{
         int numWrites;
         int currentBlock;
         bool logging;
-        std::list<int> freeSpaceList;
+        Directory directory;
+        // std::list<int> freeSpaceList;
         ofstream logfile;
         vector<BlockType*> disk;
 
@@ -143,7 +146,7 @@ namespace DISK_API{
 
             return;
         }
-        int availabeContiguousBlocks(){
+        int availabeContiguousBlocks(int blocks){
             int available = 0;
             int curr_max_available = 0;
             for(int i=0; i < numBlocks; i++){
@@ -157,11 +160,11 @@ namespace DISK_API{
             return available;
         }
         int availableContiguousBlocksStartBlock(int blockSize){
-            int startblock = 0;
+            int startBlock = 0;
             int counter = 0;
             bool goodBlockFound = false;
             for(int i = 0; i < numBlocks; i++){
-                if(i = 0){
+                if(i == 0){
                     if(disk[0]->data == NULL){
                         startBlock = 0;
                         for(int j = 0; j < blockSize+1; j++){
@@ -170,7 +173,7 @@ namespace DISK_API{
                             }
                             if(counter >= blockSize){
                                 goodBlockFound = true;
-                                return startblock;
+                                return startBlock;
                             }
                         }
                     }
@@ -181,7 +184,7 @@ namespace DISK_API{
                             }
                             if(counter >= blockSize){
                                 goodBlockFound = true;
-                                return startblock;
+                                return startBlock;
                             }
                         }
                     }
@@ -191,6 +194,7 @@ namespace DISK_API{
                 cerr << "Not enough space in disk for file of this block size (" << blockSize << ").\n";
                 return -1;
             }
+            return -1;
         }
         bool compactionNeeded(){
             bool needed = false;
@@ -205,6 +209,117 @@ namespace DISK_API{
             }
             return needed;
         }
-    };
+        void compact(){
+            //base case
+            if(compactionNeeded())
+                return;
+            else if(compactionNeeded()){
+                //get empty block index
+                bool empty = false;
+                int n = 0;
+                int firstEmptyIndex;
+                while(!empty){
+                    if(disk[n]->data == NULL){
+                        empty = true;
+                        firstEmptyIndex = n;
+                    }
+                    n++;
+                }
+                //get next file's index
+                bool nextFileFound = false;
+                int nextFileIndex;
+                int ctr = firstEmptyIndex;
+                while(!nextFileFound)
+                {
+                    if(disk[ctr]->data != NULL){
+                        nextFileFound = true;
+                        nextFileIndex = ctr;
+                    }
+                    ctr++;
+                }
+                //copy file object to an object NOT ON THE DISK
+                File newFile = get_File_By_Starting_Block(nextFileIndex);
+                //delete object with same name ON THE DISK
+                Delete(newFile.get_name());
+                //write copied file on disk at appropriate index
+                newFile.set_starting_block(firstEmptyIndex);
+                Write(newFile, newFile.get_data());
+                //check for more files that need to be compacted
+                if(compactionNeeded())
+                    compact();
+            }
+        }
 
-}
+    bool  Create(std::string const& aFileName, int fileSize) {
+			  File newFile(aFileName, fileSize);
+			  directory.add_file(newFile); //add file to set, no size = no writing, yet
+	}
+	bool	Delete(std::string const& aFileName) {
+
+				//NOTE: COMPACT MUST BE CALLED IN TANDEM WITH DELETE
+				File target = directory.get_File(aFileName);
+				BlockType* NULLBLOCK;
+                char* nullBuffer = NULL;
+                NULLBLOCK->data = nullBuffer;
+                int fileBlocks = target.get_block_size();
+				int startingBlock = target.get_starting_block();
+				for(int i = startingBlock; i < startingBlock + fileBlocks; i++){
+					WriteDisk(i, NULLBLOCK);
+				}
+				directory.remove_file(aFileName);
+	}
+	File	Open(std::string const& aFileName) {
+			return directory.get_File(aFileName);
+	}
+	bool	Close(int ) {
+			//close file
+			//return pointer to initial position
+			return true;
+	}
+	int		Read(int /*handle*/, int /*numchards*/, char* /*buffer*/) {
+			//pass data to buffer
+			//increment numchars
+			//handle?
+			return 0;
+	}
+	int		Write(File &obj, char const* newBuffer, int numchards = 0){
+			//no idea why numchards is passed but hey lets roll with it
+			numchards = 0;
+			//get amount of chars
+			while(newBuffer[numchards] != '\0')
+			{
+				numchards++;
+			}
+			//calculate number of blocks
+			int numberofBlocks = ceil(numchards/blockSize /*10*/);
+			//set file obj to have correct block size based on buffer
+			obj.set_block_size(numberofBlocks);
+			//check to see if there's enough room on the disk
+			int avail = availabeContiguousBlocks(obj.get_block_size());
+			//if enough space, set a starting block
+            int startingBlock;
+			if(avail >= numberofBlocks){
+				startingBlock =  availableContiguousBlocksStartBlock(obj.get_block_size());
+			}
+			obj.set_starting_block(startingBlock);
+			//set file data buffer
+			obj.set_data(newBuffer);
+			//copy data buffer
+			char* fileBuffer = obj.get_data();
+			//counter for buffer
+			static int fileBufferIndex = 0;
+			for(int x = 0; x < obj.get_block_size(); x++)
+			{
+                BlockType* newBlock;
+				for(int y = 0; y < blockSize && fileBufferIndex < numchards; y++){
+					newBlock->data[y] = fileBuffer[fileBufferIndex];
+					fileBufferIndex++;
+				}
+				WriteDisk(obj.get_starting_block() + x, newBlock);
+			}
+			return numchards;
+	}
+
+	int		Stats(std::string const& /*aFileName*/) { return 5; };
+	std::vector<std::string> List() { std::vector<std::string> res; res.push_back("asapasasdFile1"); return res; }
+    };
