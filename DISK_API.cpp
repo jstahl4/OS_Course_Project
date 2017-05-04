@@ -143,7 +143,55 @@ namespace DISK_API{
 
             return;
         }
-
+        int availabeContiguousBlocks(){
+            int available = 0;
+            int curr_max_available = 0;
+            for(int i=0; i < numBlocks; i++){
+                if (disk[i]->data == NULL)
+                    curr_max_available++;
+                if(curr_max_available > available)
+                    available = curr_max_available;
+                if(disk[i]->data != NULL)
+                    curr_max_available = 0;
+            }
+            return available;
+        }
+        int availableContiguousBlocksStartBlock(int blockSize){
+            int startblock = 0;
+            int counter = 0;
+            bool goodBlockFound = false;
+            for(int i = 0; i < numBlocks; i++){
+                if(i = 0){
+                    if(disk[0]->data == NULL){
+                        startBlock = 0;
+                        for(int j = 0; j < blockSize+1; j++){
+                            if(disk[j]->data == NULL){
+                                counter++;
+                            }
+                            if(counter >= blockSize){
+                                goodBlockFound = true;
+                                return startblock;
+                            }
+                        }
+                    }
+                    else if(disk[i - 1]->data != NULL && disk[i]->data == NULL){
+                        for(int j = 0; j < blockSize+1; j++){
+                            if(disk[j]->data == NULL){
+                                counter++;
+                            }
+                            if(counter >= blockSize){
+                                goodBlockFound = true;
+                                return startblock;
+                            }
+                        }
+                    }
+                }
+            }
+            if(!goodBlockFound){
+                cerr << "Not enough space in disk for file of this block size (" << blockSize << ").\n";
+                return -1;
+            }
+        }
     };
 
 }

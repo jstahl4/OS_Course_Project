@@ -6,7 +6,7 @@
 using namespace DISK_API;
 namespace ATOS_API
 {
-	int fname[10],fsize[10],fstart[10],freest[10],freesize[10],m=0,n=0,start;
+	// int fname[10],fsize[10],fstart[10],freest[10],freesize[10],m=0,n=0,start;
 	bool  Create(std::string const& aFileName, int fileSize) {
 			  File newFile(aFileName, fileSize);
 			  add_file(newFile); //add file to set, no size = no writing, yet
@@ -56,32 +56,17 @@ namespace ATOS_API
 
 	}
 	bool	Delete(std::string const& aFileName*) {
+
+				//TODO: need a file accessor to get the object
+				File target = get_File(aFileName);
+				char* nullBuffer[10] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+				int fileBlocks = target.get_block_size();
+				int startingBlock = target.get_starting_block();
+				for(int i = startingBlock; i < startingBlock + fileBlocks; i++){
+					WriteDisk(i, nullBuffer);
+				}
 				remove_file(aFileName);
-				//TODO: before/after file is removed from list, deallocate blocks
-				//  int i,j,k,flag=1;
-				//  for(i=0;i<n;i++)
-				//  	if(fname[i]==name)
-				// 	   break;
-				//  if(i==n){
-				// 	   	flag=0;
-				// 		cout << "\nNo such file exists......\n";
-				//  }
-				//  else{
-				// 		m++;
-				// 		freest[m]=fstart[i];
-				// 	    freesize[m]=fsize[i];
-				//  	    for(k=i;k<n;k++){
-				// 			   fname[k]=fname[k+1];
-				// 			   fsize[k]=fsize[k+1];
-				// 			   fstart[k]=fstart[k+1];
-				// 		}
-				// 	    n--;
-				//   }
-				//   if(flag)
-				//   {
-				//  	cout << "\n\n After deletion of this process the memory map will be : \n\n";
-				//  	display();
-				//   }
+				//TODO: Compact!!
 	}
 	int		Open(std::string const& /*aFileName*/) {
 			//find file (search algorithm?)
@@ -102,10 +87,30 @@ namespace ATOS_API
 			return 0;
 	}
 	int		Write(File &obj, int numchards, char const* newBuffer){
-			//write input
-			obj.buffer += newBuffer;
-			//save input to file
-			//write file to DISK
+			numchards = 0;
+			while(newBuffer[numchards] != '\0')
+			{
+				numchards++;
+			}
+			int numberofBlocks = ceil(numchards/blockSize /*10*/);
+			obj.set_block_size(numberofBlocks)
+			int avail = availabeContiguousBlocks(obj.get_block_size());
+			if(avail >= numberofBlocks){
+				int startingBlock =  availableContiguousBlocksStartBlock(obj.get_block_size());
+			}
+			obj.set_starting_block(startingBlock);
+			obj.set_data(newBuffer);
+			char* fileBuffer = obj.get_data();
+			static int fileBufferIndex = 0;
+			for(int x = 0; x < obj.get_block_size(); x++)
+			{
+				char * blockBuffer[10];
+				for(int y = 0; y < blockSize; y++){
+					blockBuffer =  fileBuffer[fileBufferIndex];
+					fileBufferIndex++;
+				}
+				WriteDisk(obj.get_starting_block() + x, blockBuffer);
+			}
 			return numchards;
 	}
 
