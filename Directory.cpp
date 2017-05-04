@@ -19,7 +19,7 @@ Directory::Directory()
 }
 
 // accessors/display functions
-void Directory::display_list()
+void Directory::display_list() const
 {
 	for(const auto & f: files)
 	{
@@ -27,7 +27,7 @@ void Directory::display_list()
 	}
 }
 
-unordered_set<File, file_hasher, file_comparator> Directory::get_file_list()
+unordered_set<File, file_hasher, file_comparator> Directory::get_file_list() const
 {
 	return files;
 }
@@ -62,7 +62,32 @@ File Directory::get_File(string name)
 	// it can be modified
 	File * file = &(*found);
 	*/
-}	
+}
+
+File Directory::get_File(File f)
+{
+	unordered_set<File, file_hasher, file_comparator>::iterator found = files.find(f.get_name());
+
+	return *found;
+}
+
+File Directory::get_File(int index)
+{
+	File * ret;
+
+	// iterate through all File objects and find the one with matching starting block
+	for(const auto & file: files)
+	{
+		if(file.get_starting_block() == index)
+		{
+			*ret = file;
+			break;		
+		}
+	}
+
+	return *ret;
+}
+
 // destructor
 Directory::~Directory()
 {
