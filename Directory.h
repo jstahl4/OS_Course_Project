@@ -51,10 +51,12 @@ class Directory
 		~Directory();
 
 		// accessors/display functions
-		void display_list();
-		unordered_set<File, file_hasher, file_comparator> get_file_list();
+		void display_list() const;
+		unordered_set<File, file_hasher, file_comparator> get_file_list() const;
 		string * get_file_name_list();
-		File  get_File(string);
+		File get_File(string);
+		File get_File(File);
+		File get_File(int);
 
 		// mutators
 		void add_file(File);
