@@ -149,7 +149,7 @@ using namespace std;
 
             return;
         }
-        int availabeContiguousBlocks(int blocks){
+        int availableContiguousBlocks(int blocks){
             int available = 0;
             int curr_max_available = 0;
             for(int i=0; i < numBlocks; i++){
@@ -302,7 +302,7 @@ using namespace std;
 			//set file obj to have correct block size based on buffer
 			obj.set_block_size(numberofBlocks);
 			//check to see if there's enough room on the disk
-			int avail = availabeContiguousBlocks(obj.get_block_size());
+			int avail = availableContiguousBlocks(obj.get_block_size());
 			//if enough space, set a starting block
             int startingBlock = SENTINEL;    // initialized to SENTINEL in case no blocks available
 			if(avail >= numberofBlocks){
@@ -339,7 +339,7 @@ int main(){
     d.Create(fileName);
     File newFile = d.Open(fileName);
     cout << "File named " << newFile.get_name() << " was successfully created.\n";
-    char* buffer = "Hi I'm writing data to the file.";
+    char* buffer = (char *) "Hi I'm writing data to the file.";
     newFile.set_data(buffer);
     d.Write(newFile, buffer);
     cout << newFile.get_name() << " was written to successfully\n";
