@@ -22,9 +22,17 @@ File::File(std::string fileName, int blockSize, char* buffer){
 	name=fileName;
 	calculate_size();
 }
+File::File(const File & f)
+{
+	starting_block = f.starting_block;
+	char * d = f.data;
+	*data = *d;
+	name = f.name;
+	size = f.size;
+}
 
 // operator overload
-bool File::operator==(File &right) const
+bool File::operator==(const File &right) const
 {
 	// File objects are considered equivalent if they share a name
 	return right.name == name;
@@ -79,6 +87,7 @@ void File::set_starting_block(int b)
 {
 	starting_block = b;
 }
+
 // calculators
 
 /* calculates size in blocks and sets size accordingly */
