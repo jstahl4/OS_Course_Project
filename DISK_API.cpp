@@ -7,6 +7,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
+#include <math.h>
 #include <vector>
 #include "Directory.h"
 

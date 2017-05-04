@@ -25,8 +25,7 @@ File::File(std::string fileName, int blockSize, char* buffer){
 File::File(const File & f)
 {
 	starting_block = f.starting_block;
-	char * d = f.data;
-	*data = *d;
+	data = f.get_data();
 	name = f.name;
 	size = f.size;
 }
