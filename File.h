@@ -12,9 +12,10 @@ class File{
 public:
     File(std::string fileName);
     File(std::string fileName, int blockSize, char* buffer = NULL);
+    File(const File & f);
 
     // operator overload
-    bool operator==(File &) const;
+    bool operator==(const File &) const;
 
     // destructor
     ~File();
