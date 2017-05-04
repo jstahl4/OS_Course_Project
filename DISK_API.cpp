@@ -9,7 +9,6 @@
 #include <cstdlib>
 #include <vector>
 #include "Directory.h"
-#include "File.h"
 
 using namespace std;
     class BlockType{
@@ -238,7 +237,7 @@ using namespace std;
                     ctr++;
                 }
                 //copy file object to an object NOT ON THE DISK
-                File newFile = get_File_By_Starting_Block(nextFileIndex);
+                File newFile = directory.get_File(nextFileIndex);
                 //delete object with same name ON THE DISK
                 Delete(newFile.get_name());
                 //write copied file on disk at appropriate index
@@ -282,7 +281,7 @@ using namespace std;
 			//handle?
 			return 0;
 	}
-	int		Write(File &obj, char const* newBuffer, int numchards = 0){
+	int		Write(File &obj, char* newBuffer, int numchards = 0){
 			//no idea why numchards is passed but hey lets roll with it
 			numchards = 0;
 			//get amount of chars
@@ -323,3 +322,8 @@ using namespace std;
 	int		Stats(std::string const& /*aFileName*/) { return 5; };
 	std::vector<std::string> List() { std::vector<std::string> res; res.push_back("asapasasdFile1"); return res; }
     };
+
+int main(){
+    Disk d(10,10);
+    cout << "Disk successfully created \n";
+}

@@ -1,0 +1,4 @@
+DISK: Logging enabled to logfile.txt
+DISK: block size 0 number of blocks 0
+DISK: Terminating.
+DISK: Blocks created were 0 of total 10 which is 0 %
