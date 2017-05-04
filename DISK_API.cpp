@@ -1,8 +1,9 @@
 /*
-*Tom Kueny
+* Lead author: Tom Kueny
+* Contributor: James Stahl
 *
-*Basically implemented Lyon's demo for a disk object to have
-*something to work off of for the ATOS API
+* Basically implemented Lyon's demo for a disk object to have
+* something to work off of for the ATOS API
 */
 #include <iostream>
 #include <fstream>
@@ -10,6 +11,8 @@
 #include <math.h>
 #include <vector>
 #include "Directory.h"
+
+#define SENTINEL 999
 
 using namespace std;
     class BlockType{
@@ -295,13 +298,13 @@ using namespace std;
 				numchards++;
 			}
 			//calculate number of blocks
-			int numberofBlocks = ceil(numchards/blockSize /*10*/);
+			int numberofBlocks = (int)ceil(numchards/blockSize /*10*/);
 			//set file obj to have correct block size based on buffer
 			obj.set_block_size(numberofBlocks);
 			//check to see if there's enough room on the disk
 			int avail = availabeContiguousBlocks(obj.get_block_size());
 			//if enough space, set a starting block
-            int startingBlock;
+            int startingBlock = SENTINEL;    // initialized to SENTINEL in case no blocks available
 			if(avail >= numberofBlocks){
 				startingBlock =  availableContiguousBlocksStartBlock(obj.get_block_size());
 			}

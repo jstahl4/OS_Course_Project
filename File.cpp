@@ -25,7 +25,7 @@ File::File(std::string fileName, int blockSize, char* buffer){
 File::File(const File & f)
 {
 	starting_block = f.starting_block;
-	data = f.get_data();
+	data = f.get_data();	// accessor used to simplify obtaining pointer
 	name = f.name;
 	size = f.size;
 }
