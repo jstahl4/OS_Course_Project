@@ -192,6 +192,19 @@ namespace DISK_API{
                 return -1;
             }
         }
+        bool compactionNeeded(){
+            bool needed = false;
+            bool emptyBlockFound = false;
+            int emptyStartBlock;
+            for(int i = 0; i < numBlocks; i++){
+                if(emptyBlockFound && disk[i]->data != NULL)
+                    needed = true;
+                    break;
+                if(disk[i]->data == NULL)
+                    emptyBlockFound = true;
+            }
+            return needed;
+        }
     };
 
 }

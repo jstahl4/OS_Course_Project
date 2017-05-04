@@ -66,7 +66,8 @@ namespace ATOS_API
 					WriteDisk(i, nullBuffer);
 				}
 				remove_file(aFileName);
-				//TODO: Compact!!
+				// if(compactionNeeded())
+				// 	compact();
 	}
 	int		Open(std::string const& /*aFileName*/) {
 			//find file (search algorithm?)
@@ -86,7 +87,7 @@ namespace ATOS_API
 			//handle?
 			return 0;
 	}
-	int		Write(File &obj, int numchards, char const* newBuffer){
+	int		Write(File &obj, char const* newBuffer, int numchards = 0){
 			numchards = 0;
 			while(newBuffer[numchards] != '\0')
 			{
@@ -117,31 +118,62 @@ namespace ATOS_API
 	int		Stats(std::string const& /*aFileName*/) { return 5; };
 	std::vector<std::string> List() { std::vector<std::string> res; res.push_back("asapasasdFile1"); return res; }
 
-	// int 	findFreeSpace(int fileSize);
-	//compaction algorithm goal:
-	//move files with free space in between them to be compacted on top of one another
-	//in order to leave the highest amount of space left
-	void    compaction(){
-			    int i,j,size1=0,f_size=0;
-			      if(fstart[0]!=start)
-			       {
-			    fstart[0]=start;
-			    for(i=1;i<n;i++)
-			      fstart[i]=fstart[i-1]+fsize[i-1];
-			      }
-			     else
-			       {
-			      for(i=1;i<n;i++)
-			       fstart[i]=fstart[i-1]+fsize[i-1];
-			       }
-			     f_size=freesize[0];
+	void compact(){
+		if(!compactionNeeded())
+			return;
+		else if(compactionNeeded()){
 
-			     for(j=0;j<=m;j++)
-			       size1+=freesize[j];
-			      freest[0]=freest[0]-(size1-f_size);
-			      freesize[0]=size1;
-			      m=0;
+			bool empty = false;
+			int n = 0;
+			int firstEmptyIndex;
+			while(!empty){
+				if(disk[n]->data == NULL){
+					empty = true;
+					firstEmptyIndex = n;
+				}
+				n++;
+			}
+
+			bool nextFileFound = false;
+			int nextFileIndex;
+			int ctr = firstEmptyIndex;
+			while(!nextFileFound)
+			{
+				if(disk[ctr]->data != NULL){
+					nextFileFound = true;
+					newFileIndex = ctr;
+				}
+				ctr++;
+			}
+			File newFile = getFileByIndex(newFileIndex);
+			Delete(newFile.get_name());
+			newFile.set_starting_block(firstEmptyIndex);
+			Write(newFile, newFile.get_data());
+			if(compactionNeeded())
+				compact();
+		}
 	}
+	// void    compaction(){
+	// 		    int i,j,size1=0,f_size=0;
+	// 		      if(fstart[0]!=start)
+	// 		       {
+	// 		    fstart[0]=start;
+	// 		    for(i=1;i<n;i++)
+	// 		      fstart[i]=fstart[i-1]+fsize[i-1];
+	// 		      }
+	// 		     else
+	// 		       {
+	// 		      for(i=1;i<n;i++)
+	// 		       fstart[i]=fstart[i-1]+fsize[i-1];
+	// 		       }
+	// 		     f_size=freesize[0];
+	//
+	// 		     for(j=0;j<=m;j++)
+	// 		       size1+=freesize[j];
+	// 		      freest[0]=freest[0]-(size1-f_size);
+	// 		      freesize[0]=size1;
+	// 		      m=0;
+	// }
 	// void 	display(){
 	//      int i;
 	//
