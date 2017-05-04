@@ -28,7 +28,8 @@ using namespace std;
         ~BlockType(){ delete data; };
     };
     class Disk{
-    private:
+//    private:
+public:
         int blockSize;
         int numBlocks;
         int numCreated;
@@ -120,6 +121,7 @@ using namespace std;
             if (logging)
               logfile<<"DISK: Write to block "<<offset<<"\n";
             return 0;
+
         }
         bool ReadDisk(int offset, BlockType* buffer){
             if(offset<0 || offset>=numBlocks){
@@ -209,11 +211,13 @@ using namespace std;
             bool emptyBlockFound = false;
             int emptyStartBlock;
             for(int i = 0; i < numBlocks; i++){
-                if(emptyBlockFound && disk[i]->data != NULL)
+                if(emptyBlockFound && disk[i]->data != NULL) {
                     needed = true;
                     break;
-                if(disk[i]->data == NULL)
+                }
+                if(disk[i]->data == NULL) {
                     emptyBlockFound = true;
+                }
             }
             return needed;
         }
@@ -322,7 +326,8 @@ using namespace std;
 			char* fileBuffer = obj.get_data();
 			//counter for buffer
 			static int fileBufferIndex = 0;
-            int starter = obj.get_starting_block();
+//            int starter = obj.get_starting_block();
+            int starter = 0;
 			for(int x = 0; x < obj.get_block_size(); x++)
 			{
                 BlockType* newBlock = new BlockType();
@@ -330,7 +335,8 @@ using namespace std;
 					newBlock->data[y] = fileBuffer[fileBufferIndex];
 					fileBufferIndex++;
 				}
-				WriteDisk(0, newBlock);
+				WriteDisk(starter, newBlock);
+
                 starter++;
 			}
 			return numchards;
@@ -353,4 +359,5 @@ int main(){
     d->Write(newFile, buffer);
     cout << newFile.get_data() << endl;
     cout << newFile.get_name() << " was written to successfully\n";
+    cout << (string)d->disk[0]->data << (string)d->disk[1]->data << (string)d->disk[2]->data << (string)d->disk[3]->data << endl;
  }
