@@ -20,7 +20,7 @@ using namespace std;
         int blockSize;
         char* data;
         BlockType(int blcksize = 10){
-            blockSize = blcksize;
+            blockSize = 10;
             data = new char[blcksize];
             for(int i = 0; i < blcksize; i++)
                 data[i] = NULL;
