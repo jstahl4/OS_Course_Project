@@ -343,5 +343,6 @@ int main(){
     char* buffer = (char *) "Hi I'm writing data to the file.";
     newFile.set_data(buffer);
     d.Write(newFile, buffer);
+    cout << newFile.data << endl;
     cout << newFile.get_name() << " was written to successfully\n";
  }
