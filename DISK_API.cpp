@@ -299,7 +299,7 @@ using namespace std;
 				numchards++;
 			}
 			//calculate number of blocks
-			int numberofBlocks = (int)ceil(numchards/blockSize /*10*/);
+			int numberofBlocks = (int)ceil((float)numchards/(float)blockSize /*10*/);
 			//set file obj to have correct block size based on buffer
 			obj.set_block_size(numberofBlocks);
 			//check to see if there's enough room on the disk
