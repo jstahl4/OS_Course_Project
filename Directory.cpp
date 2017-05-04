@@ -95,7 +95,7 @@ Directory::~Directory()
 }
 
 // mutators
-void Directory::add_file(File f)
+void Directory::add_file(File & f)
 {
 	files.insert(f);
 }

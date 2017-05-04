@@ -59,7 +59,7 @@ class Directory
 		File get_File(int);
 
 		// mutators
-		void add_file(File);
+		void add_file(File &);
 		void remove_file(string);
 		void remove_file(File);
 
