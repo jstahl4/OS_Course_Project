@@ -23,7 +23,7 @@ using namespace std;
             blockSize = blcksize;
             data = new char[blcksize];
             for(int i = 0; i < blcksize; i++)
-                data[i] = '.';
+                data[i] = NULL;
         }
         ~BlockType(){ delete data; };
     };
@@ -59,9 +59,10 @@ using namespace std;
             enableLogging("logfile.txt");
         	blockSize = blcksize;
             numBlocks = blocknum;
+            BlockType* block;
             numCreated=numReads=numWrites=currentBlock=0;
             for(int i = 0; i < numBlocks; i++)
-                disk.push_back(NULL);
+                disk.push_back(block);
         }
         ~Disk(){
             for(int i = 0; i < numBlocks; i++)
