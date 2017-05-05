@@ -22,7 +22,7 @@ using namespace std;
 struct file_hasher
 {
 	// overload operator (), so this can be called as a function
-	bool operator()(const File & f) const
+	size_t operator()(const File & f) const
 	{
 		// returns an unsigned int using stl-provided hash function
 		return hash<string>()(f.get_name());
@@ -32,7 +32,7 @@ struct file_hasher
 // compare File objects based on name
 struct file_comparator
 {
-	size_t operator()(const File & left, const File & right) const
+	bool operator()(const File & left, const File & right) const
 	{
 		// returns true if Files have same name
 		return left.get_name() == right.get_name();
