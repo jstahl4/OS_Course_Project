@@ -24,7 +24,8 @@ struct file_hasher
 	// overload operator (), so this can be called as a function
 	size_t operator()(const File & f) const
 	{
-		// returns an unsigned int using stl-provided hash function
+		// returns an unsigned int using stl-provided hash function based on
+        // name member in File object
 		return hash<string>()(f.get_name());
 	}
 };
