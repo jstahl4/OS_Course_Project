@@ -382,7 +382,7 @@ public:
 
         int starter = obj.get_starting_block();
         fileBufferIndex = 0;
-        for (int x = 0; x < obj.get_block_size(); x++)
+        for (int x = 0; x < obj.get_size(); x++)
         {
             BlockType *newBlock = new BlockType();
             for (int y = 0; y < blockSize && fileBufferIndex < numchards; y++)
