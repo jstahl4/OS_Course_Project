@@ -48,14 +48,17 @@ int main()
     d->directory.display_list();
     cout << endl;
 
+    /* [[DEPRECATED]] by Delete_and_compact() */
     // test deletion
-    cout << "Deleting " << newFile.get_name() << " ...\n";
-    d->Delete("TESTFILE.txt");
+    //cout << "Deleting " << newFile.get_name() << " ...\n";
+    //d->Delete("TESTFILE.txt");
+
+    cout << "If nothing from the file has been repeated in the previous line, file was deleted successfully \n";
+    cout << "\n\nOk lets try to delete n compact dis disk...\n\n";
+    d->Delete_and_compact("TESTFILE.txt");
     cout << (string) d->disk[0]->data << (string) d->disk[1]->data << (string) d->disk[2]->data
          << (string) d->disk[3]->data << endl;
-    cout << "If nothing from the file has been repeated in the previous line, file was deleted successfully \n";
-    cout << "\n\nOk lets try to compact dis disk...\n\n";
-    d->compact();
+
     cout << (string) d->disk[0]->data << (string) d->disk[1]->data << endl; ///should see New File yo.
     cout << "Now lets write the file again and see if we can read it...\n";
     d->Create(fileName);
