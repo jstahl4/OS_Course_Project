@@ -27,7 +27,7 @@ public:
         blockSize = 10;
         data = new char[blcksize];
         for (int i = 0; i < blcksize; i++)
-            data[i] = NULL;
+            data[i] = '\0';
     }
 
     ~BlockType()
@@ -188,69 +188,87 @@ public:
         return;
     }
 
-    int availableContiguousBlocks(int blocks)
-    {
-        int available = 0;
-        int curr_max_available = 0;
-        for (int i = 0; i < numBlocks; i++)
-        {
-            if (disk[i]->data == '\0')
-                curr_max_available++;
-            if (curr_max_available > available)
-                available = curr_max_available;
-            if (disk[i]->data != '\0')
-                curr_max_available = 0;
-        }
-        return available;
-    }
+//    int availableContiguousBlocks(int blocks)
+//    {
+//        int available = 0;
+//        int curr_max_available = 0;
+//        for (int i = 0; i < numBlocks; i++)
+//        {
+//            if (disk[i]->data == NULL)
+//                curr_max_available++;
+//            if (curr_max_available > available)
+//                available = curr_max_available;
+//            if (disk[i]->data != NULL)
+//                curr_max_available = 0;
+//        }
+//        return available;
+//    }
 
     int availableContiguousBlocksStartBlock(int blockSize)
     {
-        int startBlock = 0;
-        int counter = 0;
-        bool goodBlockFound = false;
-        for (int i = 0; i < numBlocks; i++)
-        {
-            if (i == 0)
-            {
-                if (disk[0]->data == NULL)
-                {
-                    startBlock = 0;
-                    for (int j = 0; j < blockSize + 1; j++)
-                    {
-                        if (disk[j]->data == NULL)
-                        {
-                            counter++;
-                        }
-                        if (counter >= blockSize)
-                        {
-                            goodBlockFound = true;
-                            return startBlock;
-                        }
-                    }
-                } else if (disk[i - 1]->data != NULL && disk[i]->data == NULL)
-                {
-                    for (int j = 0; j < blockSize + 1; j++)
-                    {
-                        if (disk[j]->data == NULL)
-                        {
-                            counter++;
-                        }
-                        if (counter >= blockSize)
-                        {
-                            goodBlockFound = true;
-                            return startBlock;
-                        }
-                    }
-                }
-            }
-        }
-        if (!goodBlockFound)
-        {
-            cerr << "Not enough space in disk for file of this block size (" << blockSize << ").\n";
-            return -1;
-        }
-        return -1;
+          int startingBlock = 0;
+          for(int i = 0; i < numBlocks; i++){
+
+              if(disk[i]->data[0] == '\0'){
+                  startingBlock = i;
+
+                  for(int j = i; j < startingBlock + blockSize; j++){
+                      if(disk[j]->data[0] != '\0') {
+                          startingBlock = -1;
+                          break;
+                      }
+                      return startingBlock;
+                  }
+                  if(startingBlock != -1)
+                    return startingBlock;
+              }
+          }
+          return startingBlock;
+//        int startBlock = 0;
+//        int counter = 0;
+//        bool goodBlockFound = false;
+//        for (int i = 0; i < numBlocks; i++)
+//        {
+//            if (i == 0)
+//            {
+//                if (disk[0]->data[0] == '\0')
+//                {
+//                    startBlock = 0;
+//                    for (int j = 0; j < blockSize + 1; j++)
+//                    {
+//                        if (disk[j]->data == NULL)
+//                        {
+//                            counter++;
+//                        }
+//                        if (counter >= blockSize)
+//                        {
+//                            goodBlockFound = true;
+//                            return startBlock;
+//                        }
+//                    }
+//                } else if (disk[i - 1]->data[0] != '\0' && disk[i]->data[0] == '\0')
+//                {
+//                    for (int j = 0; j < blockSize + 1; j++)
+//                    {
+//                        if (disk[j]->data[0] == '\0')
+//                        {
+//                            counter++;
+//                        }
+//                        if (counter >= blockSize)
+//                        {
+//                            goodBlockFound = true;
+//                            return startBlock;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        if (!goodBlockFound)
+//        {
+//            cerr << "Not enough space in disk for file of this block size (" << blockSize << ").\n";
+//            return -1;
+//        }
+//        return -1;
     }
 
     bool compactionNeeded()
@@ -321,11 +339,8 @@ public:
 
     bool Create(std::string const &aFileName, int fileSize = 0)
     {
-        cout << "1\n";
         File newFile(aFileName);
-        cout << "2\n";
         directory.add_file(newFile);
-        cout << "3\n";
         return true; //add file to set, no size = no writing, yet
     }
 
@@ -344,6 +359,7 @@ public:
             disk[i] = NULLBLOCK;
         }
         directory.remove_file(aFileName);
+        return true;
     }
 
     File Open(std::string const &aFileName)
@@ -400,16 +416,13 @@ public:
         obj.set_size(numberofBlocks);
 
         //check to see if there's enough room on the disk
-        int avail = availableContiguousBlocks(obj.get_size());
 
         //if enough space, set a starting block
         int startingBlock;// = SENTINEL;    // initialized to SENTINEL in case no blocks available
 
+        startingBlock = availableContiguousBlocksStartBlock(numberofBlocks);
 
-        if (avail >= numberofBlocks)
-        {
-            startingBlock = availableContiguousBlocksStartBlock(obj.get_size());
-        } else
+        if(startingBlock == -1)
         {
             // if not enough blocks
             return -1;
@@ -426,9 +439,7 @@ public:
         //counter for buffer
         static int fileBufferIndex = 0;
 
-        // int starter = obj.get_starting_block();
-
-        int starter = 0;
+         int starter = obj.get_starting_block();
         for (int x = 0; x < obj.get_block_size(); x++)
         {
             BlockType *newBlock = new BlockType();
@@ -437,9 +448,7 @@ public:
                 newBlock->data[y] = fileBuffer[fileBufferIndex];
                 fileBufferIndex++;
             }
-            WriteDisk(starter, newBlock);
-
-            starter++;
+            WriteDisk(starter + x, newBlock);
         }
 
         /* add file to the directory */
