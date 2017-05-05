@@ -44,7 +44,8 @@ public:
 
         bool createBlock(int blockNumber){
             if(blockNumber < numBlocks){
-                disk[blockNumber] = new BlockType(blockSize);
+                BlockType* block = new BlockType(blockSize);
+                disk.push_back(block);
                 numCreated++;
                 return true;
             }
@@ -63,7 +64,7 @@ public:
             BlockType* block = new BlockType();
             numCreated=numReads=numWrites=currentBlock=0;
             for(int i = 0; i < numBlocks; i++)
-                disk.push_back(block);
+                createBlock(i);
         }
         ~Disk(){
             for(int i = 0; i < numBlocks; i++)
@@ -112,6 +113,7 @@ public:
             // do the data write
             if (buffer->data!=NULL && disk[offset]->data!=NULL) {
               for (int i=0; i<blockSize; i++)
+
                 disk[offset]->data[i] = buffer->data[i];
               numWrites++;
             }
@@ -280,7 +282,7 @@ public:
                 int fileBlocks = target.get_block_size();
 				int startingBlock = target.get_starting_block();
 				for(int i = startingBlock; i < startingBlock + fileBlocks; i++){
-					WriteDisk(i, NULLBLOCK);
+					WriteDisk(startingBlock, NULLBLOCK);
 				}
 				directory.remove_file(aFileName);
 	}
@@ -360,4 +362,8 @@ int main(){
     cout << newFile.get_data() << endl;
     cout << newFile.get_name() << " was written to successfully\n";
     cout << (string)d->disk[0]->data << (string)d->disk[1]->data << (string)d->disk[2]->data << (string)d->disk[3]->data << endl;
+    cout << "Deleting file TESTFILE.txt ... \n";
+    d->Delete(fileName);
+    cout << (string)d->disk[0]->data << (string)d->disk[1]->data << (string)d->disk[2]->data << (string)d->disk[3]->data << endl;
+
  }
