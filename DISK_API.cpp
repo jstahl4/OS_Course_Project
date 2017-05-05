@@ -341,6 +341,15 @@ public:
 
                 starter++;
 			}
+
+            /* add file to the directory */
+
+            // remove the file with the given filename
+            directory.remove_file(obj);
+
+            // add file back with new info
+            directory.add_file(obj);
+
 			return numchards;
 	}
 
