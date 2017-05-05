@@ -50,10 +50,14 @@ public:
     void calculate_size();
 
 private:
+    // represents size in bytes of each block
     static int block_size;
+
     int starting_block;
     char *data;
     std::string name;
+
+    // represents the size in blocks
     int size;
 };
 

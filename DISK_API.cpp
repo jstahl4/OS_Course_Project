@@ -54,7 +54,8 @@ public:
     {
         if (blockNumber < numBlocks)
         {
-            disk[blockNumber] = new BlockType(blockSize);
+            // push_back() used to add BlockTypes to disk
+            disk.push_back(new BlockType(blockSize));
             numCreated++;
             return true;
         } else
@@ -193,11 +194,11 @@ public:
         int curr_max_available = 0;
         for (int i = 0; i < numBlocks; i++)
         {
-            if (disk[i]->data == "")
+            if (disk[i]->data == '\0')
                 curr_max_available++;
             if (curr_max_available > available)
                 available = curr_max_available;
-            if (disk[i]->data != "")
+            if (disk[i]->data != '\0')
                 curr_max_available = 0;
         }
         return available;
@@ -383,24 +384,34 @@ public:
     {
         //no idea why numchards is passed but hey lets roll with it
         numchards = 0;
+
         //get amount of chars
         while (newBuffer[numchards] != '\0')
         {
             numchards++;
+
         }
+
         //calculate number of blocks
         int numberofBlocks = (int) ceil((float) numchards / (float) blockSize /*10*/);
+
         //set file obj to have correct block size based on buffer
-        obj.set_block_size(numberofBlocks);
+        obj.set_size(numberofBlocks);
+
         //check to see if there's enough room on the disk
-        int avail = availableContiguousBlocks(obj.get_block_size());
+        int avail = availableContiguousBlocks(obj.get_size());
+
         //if enough space, set a starting block
         int startingBlock;// = SENTINEL;    // initialized to SENTINEL in case no blocks available
 
 
         if (avail >= numberofBlocks)
         {
-            startingBlock = availableContiguousBlocksStartBlock(obj.get_block_size());
+            startingBlock = availableContiguousBlocksStartBlock(obj.get_size());
+        } else
+        {
+            // if not enough blocks
+            return -1;
         }
 
         obj.set_starting_block(startingBlock);
