@@ -44,7 +44,7 @@ public:
 
         bool createBlock(int blockNumber){
             if(blockNumber < numBlocks){
-                disk.push_back(new BlockType(blockSize));
+                disk[blockNumber] = new BlockType(blockSize);
                 numCreated++;
                 return true;
             }
@@ -269,7 +269,6 @@ public:
               cout << "2\n";
 			  directory.add_file(newFile);
               cout << "3\n";
-
               return true; //add file to set, no size = no writing, yet
 	}
 	bool	Delete(std::string const& aFileName) {
@@ -289,17 +288,29 @@ public:
 	File	Open(std::string const& aFileName) {
 			return directory.get_File(aFileName);
 	}
-	bool	Close(int ) {
-			//close file
-			//return pointer to initial position
+	bool	Close(string fileName, char* buffer = NULL) {
+            //buffer is NULL if no write is done
+            if (buffer != NULL){
+                File obj = directory.get_File(fileName);
+                Write(obj, buffer);
+            }
 			return true;
 	}
-	int		Read(int /*handle*/, int /*numchards*/, char* /*buffer*/) {
-			//pass data to buffer
-			//increment numchars
-			//handle?
-			return 0;
-	}
+    char*	Read(string fileName, int numchards, char* buffer) {
+        File fileObj = directory.get_File(fileName);
+        int starter = fileObj.get_starting_block();
+        char *newBuffer;
+        static int n = 0;
+        for (int i = starter; i < starter + fileObj.get_block_size(); i++) {
+            int j = 0;
+            while (disk[i]->data[j] != '\0' || j < 10)
+                newBuffer[n] = disk[i]->data[j];
+            j++;
+            n++;
+        }
+
+        return newBuffer;
+    }
 	int		Write(File &obj, char* newBuffer, int numchards = 0){
 			//no idea why numchards is passed but hey lets roll with it
 			numchards = 0;
@@ -357,18 +368,3 @@ public:
 	std::vector<std::string> List() { std::vector<std::string> res; res.push_back("asapasasdFile1"); return res; }
     };
 
-//int main(){
-//    Disk * d = new Disk(10,10);
-//    string fileName = "TESTFILE.txt";
-//    cout << "Disk successfully created \n";
-//    cout << "Creating file named " << fileName << " ...\n";
-//    d->Create(fileName);
-//    File newFile = d->Open(fileName);
-//    cout << "File named " << newFile.get_name() << " was successfully created.\n";
-//    char* buffer = (char *) "Hi I'm writing data to the file.";
-//    newFile.set_data(buffer);
-//    d->Write(newFile, buffer);
-//    cout << newFile.get_data() << endl;
-//    cout << newFile.get_name() << " was written to successfully\n";
-//    cout << (string)d->disk[0]->data << (string)d->disk[1]->data << (string)d->disk[2]->data << (string)d->disk[3]->data << endl;
-//}
