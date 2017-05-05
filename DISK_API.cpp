@@ -230,115 +230,6 @@ public:
         return needed;
     }
 
-    void compact()
-    {
-        //base case
-        if (compactionNeeded())
-            return;
-        else if (compactionNeeded())
-        {
-            //get empty block index
-            bool empty = false;
-            int n = 0;
-            int firstEmptyIndex;
-            while (!empty)
-            {
-                if (disk[n]->data == NULL)
-                {
-                    empty = true;
-                    firstEmptyIndex = n;
-                }
-                n++;
-            }
-            //get next file's index
-            bool nextFileFound = false;
-            int nextFileIndex;
-            int ctr = firstEmptyIndex;
-            while (!nextFileFound)
-            {
-                if (disk[ctr]->data != NULL)
-                {
-                    nextFileFound = true;
-                    nextFileIndex = ctr;
-                }
-                ctr++;
-            }
-            //copy file object to an object NOT ON THE DISK
-            File newFile = directory.get_File(nextFileIndex);
-            //delete object with same name ON THE DISK
-            Delete(newFile.get_name());
-            //write copied file on disk at appropriate index
-            newFile.set_starting_block(firstEmptyIndex);
-            Write(newFile, newFile.get_data());
-            //check for more files that need to be compacted
-            if (compactionNeeded())
-                compact();
-        }
-    }
-
-    bool Create(std::string const &aFileName, int fileSize = 0)
-    {
-        File newFile(aFileName);
-        directory.add_file(newFile);
-        return true; //add file to set, no size = no writing, yet
-    }
-
-    bool Delete(std::string const &aFileName)
-    {
-        //NOTE: COMPACT MUST BE CALLED IN TANDEM WITH DELETE
-
-        // obtain info for deletion
-        File target = directory.get_File(aFileName);
-        int fileBlocks = target.get_size();
-        int startingBlock = target.get_starting_block();
-
-        // clear appropriate data on disk and replace with dummy data
-        for (int i = startingBlock; i < startingBlock + fileBlocks; i++)
-        {
-            delete disk[i]->data;
-            disk[i]->data = new char[blockSize];
-        }
-
-        // remove file from directory
-        directory.remove_file(aFileName);
-        return true;
-    }
-
-    File Open(std::string const &aFileName)
-    {
-        return directory.get_File(aFileName);
-    }
-
-    bool Close(string fileName, char *buffer = NULL)
-    {
-        //buffer is NULL if no write is done
-        if (buffer != NULL)
-        {
-            File obj = directory.get_File(fileName);
-            Write(obj, buffer);
-        }
-        return true;
-    }
-
-    char *Read(string fileName, int numchards = 0, char *buffer = NULL)
-    {
-        File fileObj = directory.get_File(fileName);
-        int starter = fileObj.get_starting_block();
-        char *newBuffer;
-        static int n = 0;
-        for (int i = starter; i < starter + fileObj.get_block_size(); i++)
-        {
-            int j = 0;
-            while (disk[i]->data[j] != '\0' || j < 10) {
-                newBuffer[n] = disk[i]->data[j];
-                j++;
-                n++;
-            }
-        }
-
-        return newBuffer;
-    }
-
     int Write(File &obj, char *newBuffer, int numchards = 0)
     {
         //no idea why numchards is passed but hey lets roll with it
@@ -348,6 +239,7 @@ public:
         while (newBuffer[numchards] != '\0')
         {
             numchards++;
+
         }
 
         //calculate number of blocks
@@ -405,7 +297,147 @@ public:
         return numchards;
     }
 
-    int Stats(std::string const & /*aFileName*/)
+    void compact()
+    {
+        //base case
+        if (compactionNeeded())
+            return;
+        else if (compactionNeeded())
+        {
+            //get empty block index
+            bool empty = false;
+            int n = 0;
+            int firstEmptyIndex;
+            while (!empty)
+            {
+                if (disk[n]->data == NULL)
+                {
+                    empty = true;
+                    firstEmptyIndex = n;
+                }
+                n++;
+            }
+            //get next file's index
+            bool nextFileFound = false;
+            int nextFileIndex;
+            int ctr = firstEmptyIndex;
+            while (!nextFileFound)
+            {
+                if (disk[ctr]->data != NULL)
+                {
+                    nextFileFound = true;
+                    nextFileIndex = ctr;
+                }
+                ctr++;
+            }
+            //copy file object to an object NOT ON THE DISK
+            File newFile = directory.get_File(nextFileIndex);
+            //delete object with same name ON THE DISK
+            Delete(newFile.get_name());
+            //write copied file on disk at appropriate index
+            newFile.set_starting_block(firstEmptyIndex);
+            Write(newFile, newFile.get_data());
+            //check for more files that need to be compacted
+            if (compactionNeeded())
+                compact();
+        }
+    }
+
+    bool Create(std::string const &aFileName, int fileSize = 0)
+    {
+        File newFile(aFileName);
+        directory.add_file(newFile);
+        return true; //add file to set, no size = no writing, yet
+    }
+
+    bool Delete(std::string const &aFileName)
+    {
+
+        //NOTE: COMPACT MUST BE CALLED IN TANDEM WITH DELETE
+        File target = directory.get_File(aFileName);
+        BlockType *NULLBLOCK;
+        char *nullBuffer = NULL;
+        NULLBLOCK->data = nullBuffer;
+        int fileBlocks = target.get_block_size();
+        int startingBlock = target.get_starting_block();
+        for (int i = startingBlock; i < startingBlock + fileBlocks; i++)
+        {
+            disk[i] = NULLBLOCK;
+        }
+        directory.remove_file(aFileName);
+        return true;
+    }
+
+    File Open(std::string const &aFileName)
+    {
+        return directory.get_File(aFileName);
+    }
+
+    bool Close(string fileName, char *buffer = NULL)
+    {
+        //buffer is NULL if no write is done
+        if (buffer != NULL)
+        {
+            File obj = directory.get_File(fileName);
+            Write(obj, buffer);
+        }
+        return true;
+    }
+
+    char* Read(string fileName, int numchards = 0, char *buffer = NULL)
+    {
+        File fileObj = directory.get_File(fileName);
+        int starter = fileObj.get_starting_block();
+        static int ctr = 0;
+        char* newBuffer;
+
+        for(int i = 0; i < fileObj.get_block_size(); i++){
+            BlockType* tempBuffer = new BlockType;
+            ReadDisk(starter, tempBuffer);
+            starter++;
+            int j = 0;
+            while(tempBuffer->data[j] != '\0'){
+                j++;
+
+            }
+            for(int n = 0; n < j; n++){
+                newBuffer[ctr] = tempBuffer->data[n];
+                ctr++;
+            }
+
+        }
+        return newBuffer;
+
+
+//        static int n = 0;
+//
+//        for (int i = starter; i < starter + fileObj.get_block_size(); i++)
+//        {
+//
+//            int j = 0;
+//            while (disk[i]->data[j] != '\0' || j < 10) {
+//                newBuffer[n] = disk[i]->data[j];
+//                j++;
+//                n++;
+//            }
+//        }
+    }
+
+//        static int n = 0;
+//
+//        for (int i = starter; i < starter + fileObj.get_block_size(); i++)
+//        {
+//
+//            int j = 0;
+//            while (disk[i]->data[j] != '\0' || j < 10) {
+//                newBuffer[n] = disk[i]->data[j];
+//                j++;
+//                n++;
+//            }
+//        }
+    
+
+int Stats(std::string const & /*aFileName*/)
     { return 5; };
 
     std::vector<std::string> List()
