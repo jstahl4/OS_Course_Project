@@ -285,18 +285,21 @@ public:
 
     bool Delete(std::string const &aFileName)
     {
-
         //NOTE: COMPACT MUST BE CALLED IN TANDEM WITH DELETE
+
+        // obtain info for deletion
         File target = directory.get_File(aFileName);
-        BlockType *NULLBLOCK;
-        char *nullBuffer = NULL;
-        NULLBLOCK->data = nullBuffer;
-        int fileBlocks = target.get_block_size();
+        int fileBlocks = target.get_size();
         int startingBlock = target.get_starting_block();
+
+        // clear appropriate data on disk and replace with dummy data
         for (int i = startingBlock; i < startingBlock + fileBlocks; i++)
         {
-            disk[i] = NULLBLOCK;
+            delete disk[i]->data;
+            disk[i]->data = new char[blockSize];
         }
+
+        // remove file from directory
         directory.remove_file(aFileName);
         return true;
     }
@@ -345,7 +348,6 @@ public:
         while (newBuffer[numchards] != '\0')
         {
             numchards++;
-
         }
 
         //calculate number of blocks
