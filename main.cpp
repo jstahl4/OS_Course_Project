@@ -56,7 +56,12 @@ int main()
     cout << "If nothing from the file has been repeated in the previous line, file was deleted successfully \n";
 
     cout << "Now lets write the file again and see if we can read it...\n";
+    d->Create(fileName);
+    newFile = d->Open(fileName);
+
     d->Write(newFile, buffer);
+    cout << (string) d->disk[0]->data << (string) d->disk[1]->data << (string) d->disk[2]->data
+         << (string) d->disk[3]->data << endl;
     char* readBuffer = d->Read("TESTFILE.txt");
     cout << (string) readBuffer << endl;
 
