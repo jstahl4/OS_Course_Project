@@ -63,6 +63,7 @@ public:
             BlockType* block = new BlockType();
             numCreated=numReads=numWrites=currentBlock=0;
             for(int i = 0; i < numBlocks; i++)
+                createBlock(i);
                 disk.push_back(block);
         }
         ~Disk(){
@@ -345,3 +346,19 @@ public:
 	int		Stats(std::string const& /*aFileName*/) { return 5; };
 	std::vector<std::string> List() { std::vector<std::string> res; res.push_back("asapasasdFile1"); return res; }
     };
+
+int main(){
+    Disk * d = new Disk(10,10);
+    string fileName = "TESTFILE.txt";
+    cout << "Disk successfully created \n";
+    cout << "Creating file named " << fileName << " ...\n";
+    d->Create(fileName);
+    File newFile = d->Open(fileName);
+    cout << "File named " << newFile.get_name() << " was successfully created.\n";
+    char* buffer = (char *) "Hi I'm writing data to the file.";
+    newFile.set_data(buffer);
+    d->Write(newFile, buffer);
+    cout << newFile.get_data() << endl;
+    cout << newFile.get_name() << " was written to successfully\n";
+    cout << (string)d->disk[0]->data << (string)d->disk[1]->data << (string)d->disk[2]->data << (string)d->disk[3]->data << endl;
+}
