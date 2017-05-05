@@ -362,7 +362,7 @@ public:
         return true;
     }
 
-    char *Read(string fileName, int numchards, char *buffer)
+    char *Read(string fileName, int numchards = 0, char *buffer = NULL)
     {
         File fileObj = directory.get_File(fileName);
         int starter = fileObj.get_starting_block();
@@ -371,10 +371,11 @@ public:
         for (int i = starter; i < starter + fileObj.get_block_size(); i++)
         {
             int j = 0;
-            while (disk[i]->data[j] != '\0' || j < 10)
+            while (disk[i]->data[j] != '\0' || j < 10) {
                 newBuffer[n] = disk[i]->data[j];
-            j++;
-            n++;
+                j++;
+                n++;
+            }
         }
 
         return newBuffer;
