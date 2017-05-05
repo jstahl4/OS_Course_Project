@@ -354,16 +354,20 @@ public:
     {
 
         //NOTE: COMPACT MUST BE CALLED IN TANDEM WITH DELETE
+
+        // obtain info for deletion
         File target = directory.get_File(aFileName);
-        BlockType *NULLBLOCK;
-        char *nullBuffer = NULL;
-        NULLBLOCK->data = nullBuffer;
-        int fileBlocks = target.get_block_size();
+        int fileBlocks = target.get_size();
         int startingBlock = target.get_starting_block();
+
+        // clear appropriate data on disk and replace with dummy data
         for (int i = startingBlock; i < startingBlock + fileBlocks; i++)
         {
-            disk[i] = NULLBLOCK;
+            delete disk[i]->data;
+            disk[i]->data = new char[blockSize];
         }
+
+        // remove file from directory
         directory.remove_file(aFileName);
         return true;
     }
@@ -407,22 +411,9 @@ public:
 
         }
         return newBuffer;
-
-
-//        static int n = 0;
-//
-//        for (int i = starter; i < starter + fileObj.get_block_size(); i++)
-//        {
-//
-//            int j = 0;
-//            while (disk[i]->data[j] != '\0' || j < 10) {
-//                newBuffer[n] = disk[i]->data[j];
-//                j++;
-//                n++;
-//            }
-//        }
     }
 
+
 //        static int n = 0;
 //
 //        for (int i = starter; i < starter + fileObj.get_block_size(); i++)
@@ -435,7 +426,19 @@ public:
 //                n++;
 //            }
 //        }
-    
+    //}
+//        static int n = 0;
+//
+//        for (int i = starter; i < starter + fileObj.get_block_size(); i++)
+//        {
+//
+//            int j = 0;
+//            while (disk[i]->data[j] != '\0' || j < 10) {
+//                newBuffer[n] = disk[i]->data[j];
+//                j++;
+//                n++;
+//            }
+//        }
 
 int Stats(std::string const & /*aFileName*/)
     { return 5; };
