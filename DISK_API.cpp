@@ -282,7 +282,7 @@ public:
                 int fileBlocks = target.get_block_size();
 				int startingBlock = target.get_starting_block();
 				for(int i = startingBlock; i < startingBlock + fileBlocks; i++){
-					WriteDisk(i, NULLBLOCK);
+					disk[i] = NULLBLOCK;
 				}
 				directory.remove_file(aFileName);
 	}
