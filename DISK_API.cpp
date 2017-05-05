@@ -288,9 +288,12 @@ public:
 	File	Open(std::string const& aFileName) {
 			return directory.get_File(aFileName);
 	}
-	bool	Close(int ) {
-			//close file
-			//return pointer to initial position
+	bool	Close(string fileName, char* buffer = NULL) {
+            //buffer is NULL if no write is done
+            if (buffer != NULL){
+                File obj = directory.get_File(fileName);
+                Write(obj, buffer);
+            }
 			return true;
 	}
     char*	Read(string fileName, int numchards, char* buffer) {
