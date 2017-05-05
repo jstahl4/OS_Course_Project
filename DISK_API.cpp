@@ -365,6 +365,9 @@ public:
         {
             delete disk[i]->data;
             disk[i]->data = new char[blockSize];
+            for(int j=0; j < blockSize; j++)
+                disk[i]->data[j] = '\0';
+
         }
 
         // remove file from directory
