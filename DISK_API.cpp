@@ -138,6 +138,7 @@ public:
         if (buffer->data != NULL && disk[offset]->data != NULL)
         {
             for (int i = 0; i < blockSize; i++)
+
                 disk[offset]->data[i] = buffer->data[i];
             numWrites++;
         } else cerr << "DISK: Bad buffer pointers sent to write\n";
@@ -188,87 +189,25 @@ public:
         return;
     }
 
-//    int availableContiguousBlocks(int blocks)
-//    {
-//        int available = 0;
-//        int curr_max_available = 0;
-//        for (int i = 0; i < numBlocks; i++)
-//        {
-//            if (disk[i]->data == NULL)
-//                curr_max_available++;
-//            if (curr_max_available > available)
-//                available = curr_max_available;
-//            if (disk[i]->data != NULL)
-//                curr_max_available = 0;
-//        }
-//        return available;
-//    }
+    int availableContiguousBlocksStartBlock(int blockSize) {
+        int startingBlock = 0;
+        for (int i = 0; i < numBlocks; i++) {
 
-    int availableContiguousBlocksStartBlock(int blockSize)
-    {
-          int startingBlock = 0;
-          for(int i = 0; i < numBlocks; i++){
+            if (disk[i]->data[0] == '\0') {
+                startingBlock = i;
 
-              if(disk[i]->data[0] == '\0'){
-                  startingBlock = i;
-
-                  for(int j = i; j < startingBlock + blockSize; j++){
-                      if(disk[j]->data[0] != '\0') {
-                          startingBlock = -1;
-                          break;
-                      }
-                      return startingBlock;
-                  }
-                  if(startingBlock != -1)
+                for (int j = i; j < startingBlock + blockSize; j++) {
+                    if (disk[j]->data[0] != '\0') {
+                        startingBlock = -1;
+                        break;
+                    }
                     return startingBlock;
-              }
-          }
-          return startingBlock;
-//        int startBlock = 0;
-//        int counter = 0;
-//        bool goodBlockFound = false;
-//        for (int i = 0; i < numBlocks; i++)
-//        {
-//            if (i == 0)
-//            {
-//                if (disk[0]->data[0] == '\0')
-//                {
-//                    startBlock = 0;
-//                    for (int j = 0; j < blockSize + 1; j++)
-//                    {
-//                        if (disk[j]->data == NULL)
-//                        {
-//                            counter++;
-//                        }
-//                        if (counter >= blockSize)
-//                        {
-//                            goodBlockFound = true;
-//                            return startBlock;
-//                        }
-//                    }
-//                } else if (disk[i - 1]->data[0] != '\0' && disk[i]->data[0] == '\0')
-//                {
-//                    for (int j = 0; j < blockSize + 1; j++)
-//                    {
-//                        if (disk[j]->data[0] == '\0')
-//                        {
-//                            counter++;
-//                        }
-//                        if (counter >= blockSize)
-//                        {
-//                            goodBlockFound = true;
-//                            return startBlock;
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        if (!goodBlockFound)
-//        {
-//            cerr << "Not enough space in disk for file of this block size (" << blockSize << ").\n";
-//            return -1;
-//        }
-//        return -1;
+                }
+                if (startingBlock != -1)
+                    return startingBlock;
+            }
+        }
+        return startingBlock;
     }
 
     bool compactionNeeded()
@@ -439,7 +378,8 @@ public:
         //counter for buffer
         static int fileBufferIndex = 0;
 
-         int starter = obj.get_starting_block();
+        int starter = obj.get_starting_block();
+        fileBufferIndex = 0;
         for (int x = 0; x < obj.get_block_size(); x++)
         {
             BlockType *newBlock = new BlockType();
@@ -448,6 +388,7 @@ public:
                 newBlock->data[y] = fileBuffer[fileBufferIndex];
                 fileBufferIndex++;
             }
+
             WriteDisk(starter + x, newBlock);
         }
 

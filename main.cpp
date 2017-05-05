@@ -32,6 +32,7 @@ int main()
     d->Create(file2);
     File newFile2 = d->Open(file2);
     newFile2.set_data(buffer2);
+    cout << buffer2 << endl;
     d->Write(newFile2, buffer2);
     for(int i = 0; i < 10; i++){
         cout << (string)d->disk[i]->data << endl;
