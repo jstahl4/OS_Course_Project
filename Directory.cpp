@@ -73,19 +73,19 @@ File Directory::get_File(File f)
 
 File Directory::get_File(int index)
 {
-	File * ret;
 
+	File ret("");
 	// iterate through all File objects and find the one with matching starting block
 	for(const auto & file: files)
 	{
 		if(file.get_starting_block() == index)
 		{
-			*ret = file;
+			ret = file;
 			break;		
 		}
 	}
 
-	return *ret;
+	return ret;
 }
 
 // destructor

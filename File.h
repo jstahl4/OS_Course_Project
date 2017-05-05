@@ -22,6 +22,8 @@ public:
 
     // operator overload
     bool operator==(const File &) const;
+    //assignment operator
+    File& operator=(const File& right);
 
     // destructor
     ~File();

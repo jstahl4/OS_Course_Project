@@ -40,6 +40,13 @@ File::File(const File &f)
     size = f.size;
 }
 
+File& File::operator=(const File& right) {
+    starting_block = right.starting_block;
+    data = right.get_data();    // accessor used to simplify obtaining pointer
+    name = right.name;
+    size = right.size;
+}
+
 // operator overload
 bool File::operator==(const File &right) const
 {

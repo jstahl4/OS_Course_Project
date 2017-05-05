@@ -217,12 +217,12 @@ public:
         int emptyStartBlock;
         for (int i = 0; i < numBlocks; i++)
         {
-            if (emptyBlockFound && disk[i]->data != NULL)
+            if (emptyBlockFound && disk[i]->data[0] != '\0')
             {
                 needed = true;
                 break;
             }
-            if (disk[i]->data == NULL)
+            if (disk[i]->data[0] == '\0')
             {
                 emptyBlockFound = true;
             }
@@ -300,7 +300,7 @@ public:
     void compact()
     {
         //base case
-        if (compactionNeeded())
+        if (!compactionNeeded())
             return;
         else if (compactionNeeded())
         {
@@ -310,7 +310,7 @@ public:
             int firstEmptyIndex;
             while (!empty)
             {
-                if (disk[n]->data == NULL)
+                if (disk[n]->data[0] == '\0')
                 {
                     empty = true;
                     firstEmptyIndex = n;
@@ -323,7 +323,7 @@ public:
             int ctr = firstEmptyIndex;
             while (!nextFileFound)
             {
-                if (disk[ctr]->data != NULL)
+                if (disk[ctr]->data[0] != '\0')
                 {
                     nextFileFound = true;
                     nextFileIndex = ctr;
@@ -334,8 +334,11 @@ public:
             File newFile = directory.get_File(nextFileIndex);
             //delete object with same name ON THE DISK
             Delete(newFile.get_name());
-            //write copied file on disk at appropriate index
+            Create(newFile);
             newFile.set_starting_block(firstEmptyIndex);
+            //delete object with same name ON THE DISK
+
+            //write copied file on disk at appropriate index
             Write(newFile, newFile.get_data());
             //check for more files that need to be compacted
             if (compactionNeeded())
@@ -343,11 +346,16 @@ public:
         }
     }
 
-    bool Create(std::string const &aFileName, int fileSize = 0)
+    bool Create(std::string const &aFileName)
     {
         File newFile(aFileName);
         directory.add_file(newFile);
         return true; //add file to set, no size = no writing, yet
+    }
+    bool Create(File& obj){
+        File newFile = obj;
+        directory.add_file(newFile);
+        return true;
     }
 
     bool Delete(std::string const &aFileName)
