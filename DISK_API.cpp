@@ -63,6 +63,7 @@ public:
             BlockType* block = new BlockType();
             numCreated=numReads=numWrites=currentBlock=0;
             for(int i = 0; i < numBlocks; i++)
+                createBlock(i);
                 disk.push_back(block);
         }
         ~Disk(){
@@ -360,4 +361,4 @@ int main(){
     cout << newFile.get_data() << endl;
     cout << newFile.get_name() << " was written to successfully\n";
     cout << (string)d->disk[0]->data << (string)d->disk[1]->data << (string)d->disk[2]->data << (string)d->disk[3]->data << endl;
- }
+}
