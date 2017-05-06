@@ -462,8 +462,10 @@ public:
             }
 
         }
-        string buff;
+        string buff = "";
         buff = newBuffer;
+        if(buff == "")
+            buff = fileObj.get_data();
 
         return buff;
     }
