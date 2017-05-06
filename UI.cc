@@ -178,10 +178,9 @@ void UI::editFile(std::string const& aLine)
 		char* buffer = new char[line.length() + 1];
 		strcpy(buffer, line.c_str());
 		disk->Write(file, buffer, (int)line.length()); //!= line.size()+1) // +1 for ASCIIZ, test required!
-//		{
-//			std::cout << "$$Failed to wite data data to file." << std::endl;
-//		}
 	}
+
+    cout << endl;
 
 	if (disk->Close(file.get_name()))						// Close file handle
 	{
