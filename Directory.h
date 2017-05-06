@@ -67,7 +67,7 @@ public:
     File get_File(int);
 
     // mutators
-    void add_file(File &);
+    bool add_file(File &);
 
     void remove_file(string);
 

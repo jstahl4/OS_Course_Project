@@ -365,7 +365,7 @@ public:
     bool Create(std::string const &aFileName)
     {
         File newFile(aFileName);
-        directory.add_file(newFile);
+        if(directory.add_file(newFile));
         return true; //add file to set, no size = no writing, yet
     }
     bool Create(File& obj){
@@ -414,7 +414,10 @@ public:
 
     File Open(std::string const &aFileName)
     {
-        return directory.get_File(aFileName);
+        File obj = directory.get_File(aFileName);
+        if (obj.get_name() == aFileName)
+            return directory.get_File(aFileName);
+
     }
 
     bool Close(string fileName, char *buffer = NULL)

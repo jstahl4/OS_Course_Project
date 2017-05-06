@@ -95,9 +95,10 @@ Directory::~Directory()
 }
 
 // mutators
-void Directory::add_file(File & f)
+bool Directory::add_file(File & f)
 {
 	files.insert(f);
+    return true;
 }
 void Directory::remove_file(string f)
 {
