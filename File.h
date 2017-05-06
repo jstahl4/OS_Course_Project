@@ -9,12 +9,14 @@
 
 #include <iostream>
 
+#define DEFAULT_NAME "default_name"
+
 using namespace std;
 
 class File
 {
 public:
-    File(std::string fileName = to_string((char)default_name));
+    File(std::string fileName = default_name);
 
     File(std::string fileName, int blockSize, char *buffer = NULL);
 
@@ -51,12 +53,12 @@ public:
     // calculators
     void calculate_size();
 
+    static const string default_name = DEFAULT_NAME;
+
+
 private:
     // represents size in bytes of each block
     static int block_size;
-
-    // used to generate a default name when none is provided
-    static int default_name;
 
     int starting_block;
     char *data;

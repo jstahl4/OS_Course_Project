@@ -161,24 +161,26 @@ void UI::editFile(std::string const& aLine)
 		return;
 	}
 
-	int handle = disk->Open(cmd[1]);					// open file
-	if (handle == INVALID_ATOS_HANDLE_VALUE)
+	File file = disk->Open(cmd[1]);					// open file
+	if (file.get_name() == File::default_name)
 	{
-		std::cout << "$$failed to open " << cmd[0] << " file";		// failed to open file
+        // output to cerr already included in File::get_File() method
 		return;
 	}
 
 	std::string line;
 	while (std::getline(std::cin, line))					// Read line while not CTRL+D
 	{
-		if (disk->Write(handle, line.size()+1, line.c_str()) != line.size()+1) // +1 for ASCIIZ, test required!
+        const char * data = new char;
+        data = line.c_str();
+		if (disk->Write(file, data) != line.size()) // +1 for ASCIIZ, test required!
 		{
 			std::cout << "$$Failed to wite data data to file." << std::endl;
 			break;
 		}
 	}
 
-	if (disk->Close(handle))						// Close file handle
+	if (disk->Close(file.get_name()))						// Close file handle
 	{
 		// Successfully close
 	}
@@ -207,19 +209,19 @@ void UI::typeFile(std::string const& aLine)
 	}
 
 	File file = disk->Open(cmd[1]);					// open file
-	if (handle == INVALID_ATOS_HANDLE_VALUE)
+	if (file.get_name() == File::default_name)
 	{
 		std::cout << "$$failed to open " << cmd[0] << " file";	// failed to open file
 		return;
 	}
 
 	char buff;
-	while (disk->Read(handle, sizeof(buff), &buff ) > 0)
+	while (disk->Read(file.get_name(), sizeof(buff), &buff ) > 0)
 	{
 		std::cout << buff;
 	}
 
-	if (disk->Close(handle))					// Close file
+	if (disk->Close(file.get_name()))					// Close file
 	{
 		// Successfully close
 	}

@@ -246,7 +246,7 @@ public:
         return needed;
     }
 
-    int Write(File &obj, char *newBuffer, int numchards = 0)
+    int Write(File &obj, const char *newBuffer, int numchards = 0)
     {
         //no idea why numchards is passed but hey lets roll with it
         numchards = 0;
