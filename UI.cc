@@ -2,16 +2,13 @@
  * Asif Rahman - Team Coyote
  **********************************************************************/
 
-#include "DISK_API.cpp"  
-#include <iostream>
+#include "DISK_API.cpp"
 #include <sstream>
-#include <iterator>
-#include <cstring>
 #include "UI.h"
 
 // Construct UI class.
 UI::UI()
-	: m_FileHandle(INVALID_ATOS_HANDLE_VALUE) // Initialize the file handle with invalid handle value
+//	: m_FileHandle(INVALID_ATOS_HANDLE_VALUE) // Initialize the file handle with invalid handle value
 {
 	// Convert Commands words to enum. Increase efficiency.
 	m_Commands[Commands::Create] = "CREATE";
@@ -161,24 +158,26 @@ void UI::editFile(std::string const& aLine)
 		return;
 	}
 
-	int handle = disk->Open(cmd[1]);					// open file
-	if (handle == INVALID_ATOS_HANDLE_VALUE)
-	{
-		std::cout << "$$failed to open " << cmd[0] << " file";		// failed to open file
-		return;
-	}
+	File handle = disk->Open(cmd[1]);					// open file
+//	if (handle == INVALID_ATOS_HANDLE_VALUE)
+//	{
+//		std::cout << "$$failed to open " << cmd[0] << " file";		// failed to open file
+//		return;
+//	}
 
 	std::string line;
 	while (std::getline(std::cin, line))					// Read line while not CTRL+D
 	{
-		if (disk->Write(handle, line.size()+1, line.c_str()) != line.size()+1) // +1 for ASCIIZ, test required!
+		char* buffer;
+		string s = handle.get_name();
+		if (disk->Write(handle, buffer) != line.size()+1) // +1 for ASCIIZ, test required!
 		{
 			std::cout << "$$Failed to wite data data to file." << std::endl;
 			break;
 		}
 	}
 
-	if (disk->Close(handle))						// Close file handle
+	if (disk->Close(handle.get_name()))						// Close file handle
 	{
 		// Successfully close
 	}
@@ -207,19 +206,19 @@ void UI::typeFile(std::string const& aLine)
 	}
 
 	File file = disk->Open(cmd[1]);					// open file
-	if (handle == INVALID_ATOS_HANDLE_VALUE)
-	{
-		std::cout << "$$failed to open " << cmd[0] << " file";	// failed to open file
-		return;
-	}
+//	if (handle == INVALID_ATOS_HANDLE_VALUE)
+//	{
+//		std::cout << "$$failed to open " << cmd[0] << " file";	// failed to open file
+//		return;
+//	}
 
-	char buff;
-	while (disk->Read(handle, sizeof(buff), &buff ) > 0)
-	{
-		std::cout << buff;
-	}
+	string buff;
+	buff = disk->Read(file.get_name());
 
-	if (disk->Close(handle))					// Close file
+    std::cout << buff;
+
+
+	if (disk->Close(file.get_name()))					// Close file
 	{
 		// Successfully close
 	}
@@ -243,7 +242,7 @@ void UI::dir() const
 		std::cout << "\t" << iT << "\t\t\t" << disk->Stats(iT) << std::endl;	// print rows.
 		sum += disk->Stats(iT);							// Accumulate the size of the files.
 	}
-	std::cout << "\tFREE SPACE " << disk->TotalDiskSize() - sum << " blks" << std::endl;
+	std::cout << "\tFREE SPACE " << disk->numBlocks - sum << " blks" << std::endl;
 }
 
 // Test it all ATOS-FS function.
@@ -253,33 +252,31 @@ void UI::testIt() const
 	{
 		std::cout << "$$Failed to create ASD1 file" << std::endl;
 	}
-	int handle = disk->Open("ASD1"); 		// Open ASD1 file
-	if (handle == INVALID_ATOS_HANDLE_VALUE) 	// Check the result of the Open ATOS-FS API call
-	{
-		std::cout << "$$Failed to open ASD1 file." << std::endl; // Failed to open ASD1 file
-	}
-	else
-	{
-		int cnt = disk->Write(handle, sizeof("Something"), "Something"); // Write "Something" in ASCIIZ to ASD1 file
+		File handle = disk->Open("ASD1"); 		// Open ASD1 file
+//	if (handle == INVALID_ATOS_HANDLE_VALUE) 	// Check the result of the Open ATOS-FS API call
+//	{
+//		std::cout << "$$Failed to open ASD1 file." << std::endl; // Failed to open ASD1 file
+//	}
+
+		int cnt = disk->Write(handle, "Something"); // Write "Something" in ASCIIZ to ASD1 file
 		std::cout << "$$" << cnt << " bytes written. (-1 is error)" << std::endl;
-		disk->Close(handle);		// Close the file handle
+		disk->Close(handle.get_name());		// Close the file handle
 
 		handle = disk->Open("ASD1");	// Open ASD1 file (seek 0!!!)
-		if (handle == INVALID_ATOS_HANDLE_VALUE)// Check the result of the Open ATOS-FS API call
-		{
-			std::cout << "$$Failed to open ASD1 file" << std::endl; // Failed to open ASD1 file
-		}
-		else
-		{
-			char buff;
-			while (disk->Read(handle, sizeof(buff), &buff ) > 0) // Read contents from ASD1 file
-			{
-				std::cout << buff;
-			}
-			disk->Close(handle); 	// Close the file handle
-		}
+//		if (handle == INVALID_ATOS_HANDLE_VALUE)// Check the result of the Open ATOS-FS API call
+//		{
+//			std::cout << "$$Failed to open ASD1 file" << std::endl; // Failed to open ASD1 file
+//		}
+
+			string buff;
+			buff = disk->Read(handle.get_name()); // Read contents from ASD1 file
+
+            std::cout << buff;
+
+			disk->Close(handle.get_name()); 	// Close the file handle
+
 		dir();					// print the directory structure.
-	}
+
 	if (disk->Delete("ASD1"))			// Try to delete the ASD1 file
 	{
 		std::cout << "$$ASD1 file successfuly deleted." << std::endl;
