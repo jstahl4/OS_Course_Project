@@ -212,6 +212,13 @@ void UI::typeFile(std::string const& aLine)
 		return;
 	}
 
+	// if file has no data, return
+	if(file.get_data() =='\0')
+	{
+		cout << endl;
+		return;
+	}
+
 	string buff;
 	buff = disk->Read(file.get_name());
 
