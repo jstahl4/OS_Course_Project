@@ -130,6 +130,8 @@ void UI::deleteFile(std::string const& aLine)
 
 	// parsing the command.
 	std::vector<std::string> cmd = parseLine(aLine);
+	if(!disk->directory.exists(cmd[1]))
+		return;
 	if (cmd[0] != m_Commands[Commands::Delete])				// Command shall be create.
 	{
 		std::cout << "$$Invalid command." << std::endl;
@@ -151,8 +153,11 @@ void UI::deleteFile(std::string const& aLine)
 // processing the editFile command.
 void UI::editFile(std::string const& aLine)
 {
+
 	// parsing the command.
 	std::vector<std::string> cmd = parseLine(aLine);
+	if(!disk->directory.exists(cmd[1]))
+		return;
 	if (cmd[0] != m_Commands[Commands::Edit])				// Command shall be CREATE.
 	{
 		std::cout << "$$Invalid command." << std::endl;
@@ -201,6 +206,8 @@ void UI::typeFile(std::string const& aLine)
 {
 	// parsing the command.
 	std::vector<std::string> cmd = parseLine(aLine);
+	if(!disk->directory.exists(cmd[1]))
+		return;
 	if (cmd[0] != m_Commands[Commands::Type])				// Command shall be create.
 	{
 		std::cout << "$$Invalid command." << std::endl;
@@ -219,9 +226,11 @@ void UI::typeFile(std::string const& aLine)
 		cout << endl;
         return;
 	}
+	if (file.get_data() == (char*)'\0' || file.get_data() == NULL)
+		return;
 
 	// if file has no data, return
-	if(file.get_data() =='\0')
+	if(file.get_data() == (char*)'\0')
 	{
 		cout << endl;
 		return;

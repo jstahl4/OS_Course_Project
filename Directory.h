@@ -75,6 +75,7 @@ public:
 
     // calculator
     int calculate_total_blocks();
+    bool exists(string n);
 
 private:
     unordered_set<File, file_hasher, file_comparator> files;

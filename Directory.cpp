@@ -26,7 +26,17 @@ void Directory::display_list() const
 		cout << f.get_name() << endl;
 	}
 }
+bool Directory::exists(string n){
+    File * ret = new File();
+    unordered_set<File, file_hasher, file_comparator>::iterator found = files.find(n);
 
+    if(found == files.end())
+    {
+        cerr << "File named " << n << " not found.\n";
+        return false;
+    }
+    return true;
+}
 unordered_set<File, file_hasher, file_comparator> Directory::get_file_list() const
 {
 	return files;
