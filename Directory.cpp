@@ -26,6 +26,7 @@ void Directory::display_list() const
 		cout << f.get_name() << endl;
 	}
 }
+//by Tom Kueny... checks if file is there in directory/has been created
 bool Directory::exists(string n){
     File * ret = new File();
     unordered_set<File, file_hasher, file_comparator>::iterator found = files.find(n);

@@ -138,7 +138,7 @@ public:
         } else cerr << "DISK: Could not open " << logfileName << "\n";
         return logging;
     }
-
+    //Prof Lyons
     bool WriteDisk(int offset, BlockType *buffer)
     {
 
@@ -172,7 +172,7 @@ public:
         return 0;
 
     }
-
+    //Tom kueny
     bool ReadDisk(int offset, BlockType *buffer)
     {
         if (offset < 0 || offset >= numBlocks)
@@ -319,7 +319,7 @@ public:
 
         return numchards;
     }
-
+    //Tom Kueny
     void compact()
     {
         //base case
@@ -368,19 +368,20 @@ public:
                 compact();
         }
     }
-
+    //Tom Kueny
     bool Create(std::string const &aFileName)
     {
         File newFile(aFileName);
         if(directory.add_file(newFile));
         return true; //add file to set, no size = no writing, yet
     }
+    //Tom Kueny
     bool Create(File& obj){
         File newFile = obj;
         directory.add_file(newFile);
         return true;
     }
-
+    //Tom Kueny
     bool Delete(std::string const &aFileName)
     {
 
@@ -413,19 +414,20 @@ public:
      * This method calls the two sequentially. compact() cannot be called within
      * Delete() because compact() uses Delete(), creating an infinite loop
      */
+    //James Stahl
     void Delete_and_compact(const string & file_name)
     {
         if(Delete(file_name))
             this->compact();
     }
-
+    //Tom Kueny
     File Open(std::string const &aFileName)
     {
         File obj = directory.get_File(aFileName);
         return obj;
 
     }
-
+    //Tom Kueny
     bool Close(string fileName, char *buffer = NULL)
     {
         //buffer is NULL if no write is done
@@ -436,7 +438,7 @@ public:
         }
         return true;
     }
-
+    //Tom Kueny
     string Read(string fileName, int numchards = 0, char *buffer = NULL)
     {
 
@@ -470,7 +472,7 @@ public:
         return buff;
     }
 
-
+    //Tom Kueny
     int Stats(std::string const & aFileName)
     {
         File f = directory.get_File(aFileName);
