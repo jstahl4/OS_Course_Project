@@ -454,18 +454,27 @@ public:
     }
 
 
-int Stats(std::string const & aFileName)
+    int Stats(std::string const & aFileName)
     {
         File f = directory.get_File(aFileName);
         int s = f.get_block_size();
         return s;
     }
-
-    std::vector<std::string> List()
+    vector<string> List()
     {
-        std::vector<std::string> res;
-        res.push_back("asapasasdFile1");
-        return res;
+        vector<string> ret;
+        string* fileNames = directory.get_file_name_list();
+        cout << fileNames << endl;
+
+        for(int x = 0; x < sizeof(fileNames)/ sizeof(fileNames[0]); x++){
+
+            string fileAndSizeCombo = "\t";
+            fileAndSizeCombo += fileNames[x] + "\t\t\t";
+            File obj = directory.get_File(fileNames[x]);
+            fileAndSizeCombo += obj.get_block_size();
+            ret.push_back(fileAndSizeCombo);
+        }
+
     }
 };
 

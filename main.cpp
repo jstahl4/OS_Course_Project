@@ -69,6 +69,10 @@ int main()
     string readBuffer = d->Read("TESTFILE.txt");
 
     cout << readBuffer << endl;
+    vector<string> list = d->List();
+    for(int i = 0; i < list.size(); i++){
+        cout << list[i] << endl;
+    }
 
 
 }
