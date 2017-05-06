@@ -238,16 +238,18 @@ void UI::typeFile(std::string const& aLine)
 // print the directory list.
 void UI::dir() const
 {
-	uint64_t sum = 0;						// Total used space.
 	std::vector<std::string> l = disk->List();									// Get the directory list from ATOS-FS.
 	std::cout << "\tATOS-FS Directory Listing." << std::endl;						// Directory content header
-	std::cout << "\tFILENAME\t\t\tSIZE(blks)" << std::endl;
+	std::cout << "\tFILENAME\t\tSIZE(blks)" << std::endl;
 	for (auto const& iT : l)
 	{
-		std::cout << "\t" << iT << "\t\t\t" << disk->Stats(iT) << std::endl;	// print rows.
-		sum += disk->Stats(iT);							// Accumulate the size of the files.
+		std::cout << "\t" << iT << std::endl;	// print rows.
 	}
-	std::cout << "\tFREE SPACE " << disk->numBlocks - sum << " blks" << std::endl;
+
+	// calculate total space used and output free space
+	int sum = disk->directory.calculate_total_blocks();
+	int free = disk->numBlocks - sum;
+	std::cout << "\tFREE SPACE " << free << " blks" << std::endl;
 }
 
 // Test it all ATOS-FS function.

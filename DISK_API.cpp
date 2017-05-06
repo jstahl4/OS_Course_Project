@@ -486,7 +486,7 @@ public:
         string tuple;
         for(const auto & file: list)
         {
-            tuple = file.get_name() + "\t\t" + to_string(file.get_size());
+            tuple = file.get_name() + "\t\t\t" + to_string(file.get_size());
             ret.push_back(tuple);
         }
 

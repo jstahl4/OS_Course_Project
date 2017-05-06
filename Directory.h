@@ -73,6 +73,9 @@ public:
 
     void remove_file(File);
 
+    // calculator
+    int calculate_total_blocks();
+
 private:
     unordered_set<File, file_hasher, file_comparator> files;
 };
