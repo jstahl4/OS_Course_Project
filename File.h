@@ -53,13 +53,11 @@ public:
     // calculators
     void calculate_size();
 
-    static const string default_name = DEFAULT_NAME;
-
-
+    const string get_default();
+    static const string default_name;
 private:
     // represents size in bytes of each block
     static int block_size;
-
     int starting_block;
     char *data;
     std::string name;

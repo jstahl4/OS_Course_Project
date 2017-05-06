@@ -6,6 +6,8 @@
 #pragma once
 #include <string>
 #include <map>
+#ifndef DISK_API_CPP
+#define DISK_API_CPP
 #include "DISK_API.cpp"	//Replace with the real ATOS-FS API header
 
 class UI
@@ -33,3 +35,4 @@ private:
 
 };
 
+#endif
