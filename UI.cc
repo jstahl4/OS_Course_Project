@@ -125,7 +125,10 @@ void UI::deleteFile(std::string const& aLine)
 	// parsing the command.
 	std::vector<std::string> cmd = parseLine(aLine);
 	if(!disk->directory.exists(cmd[1]))
-		return;
+    {
+        cout << endl;
+        return;
+    }
 	if (cmd[0] != m_Commands[Commands::Delete])				// Command shall be create.
 	{
 		std::cout << "$$Invalid command." << std::endl;
@@ -167,7 +170,8 @@ void UI::editFile(std::string const& aLine)
 	if (file.get_name() == DEFAULT_NAME)
 	{
         // output to cerr already included in File::get_File() method
-		return;
+		cout << endl;
+        return;
 	}
 
 	std::string line;
@@ -216,7 +220,8 @@ void UI::typeFile(std::string const& aLine)
 	if (file.get_name() == DEFAULT_NAME)
 	{
 		//std::cout << "$$failed to open " << cmd[0] << " file";	// failed to open file
-		return;
+		cout << endl;
+        return;
 	}
 	if (file.get_data() == (char*)'\0' || file.get_data() == NULL)
 		return;
