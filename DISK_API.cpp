@@ -2,14 +2,30 @@
 * Lead author: Tom Kueny
 * Contributor: James Stahl
 *
-* Basically implemented Lyon's demo for a disk object to have
-* something to work off of for the ATOS API
+* Taking inspiration from "diskprocess.cpp" with some modifications to the original methods of
+* File: diskprocess.cpp
+ This source file defines  a disk emulation process that
+ will serve as the lowest level of a file system.
+ In the include file, there is one class DiskBlockType
+ which defines what a block is, and  one class DiskProcess that defines
+ the disk and operations on the disk. Constructors and destructors are
+ defined in the include file. The remaining function implementations
+ are in this file.
+
+
+ Author: D.M. Lyons dlyons@fordham.edu
+ Most recent revision: Spring 2016
+
+ If you use this program or any part of it you need to incude this entire
+ comment. No warranty or support implied.
+
+ c dmlyons 2012- 2017 Fordham CIS.
+*
+*
 */
 #include <iostream>
-#include <fstream>
-#include <cstdlib>
-#include <math.h>
 #include <vector>
+#include <fstream>
 #include "Directory.h"
 
 #define SENTINEL 999
@@ -67,7 +83,7 @@ public:
 
 public:
 
-    Disk(int blcksize, int blocknum)
+    Disk(int blcksize = 10, int blocknum = 10)
     {
         enableLogging("logfile.txt");
         blockSize = blcksize;
@@ -410,7 +426,7 @@ public:
         return true;
     }
 
-    char* Read(string fileName, int numchards = 0, char *buffer = NULL)
+    string Read(string fileName, int numchards = 0, char *buffer = NULL)
     {
         File fileObj = directory.get_File(fileName);
         int starter = fileObj.get_starting_block();
@@ -430,37 +446,13 @@ public:
                 newBuffer[ctr] = tempBuffer->data[n];
                 ctr++;
             }
-
         }
-        return newBuffer;
+        string buff;
+        buff = string(newBuffer);
+
+        return buff;
     }
 
-
-//        static int n = 0;
-//
-//        for (int i = starter; i < starter + fileObj.get_block_size(); i++)
-//        {
-//
-//            int j = 0;
-//            while (disk[i]->data[j] != '\0' || j < 10) {
-//                newBuffer[n] = disk[i]->data[j];
-//                j++;
-//                n++;
-//            }
-//        }
-    //}
-//        static int n = 0;
-//
-//        for (int i = starter; i < starter + fileObj.get_block_size(); i++)
-//        {
-//
-//            int j = 0;
-//            while (disk[i]->data[j] != '\0' || j < 10) {
-//                newBuffer[n] = disk[i]->data[j];
-//                j++;
-//                n++;
-//            }
-//        }
 
 int Stats(std::string const & /*aFileName*/)
     { return 5; };
