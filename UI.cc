@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <cstdlib>
 #include <iterator>
 #include <cstring>
 #include <iomanip>
@@ -22,7 +23,7 @@ UI::UI()
 	m_Commands[Commands::Type] = "TYPE";
 	m_Commands[Commands::Exit] = "EXIT";
 	m_Commands[Commands::TestIt] = "TESTIT";
-    disk = new Disk();
+    disk = new Disk(10,10);
 }
 
 // Destruct UI class.
@@ -170,16 +171,18 @@ void UI::editFile(std::string const& aLine)
 	}
 
 	std::string line;
-	while (std::getline(std::cin, line))					// Read line while not CTRL+D
-	{
-		char* buffer;
+	//while (std::getline(std::cin, line))					// Read line while not CTRL+D
+	//{
 		string s = file.get_name();
-		if (disk->Write(file, buffer) != line.size()+1) // +1 for ASCIIZ, test required!
-		{
-			std::cout << "$$Failed to write data data to file." << std::endl;
-			break;
-		}
-	}
+		int n = 0;
+	    getline(cin, line);
+		char* buffer = new char[line.length() + 1];
+		strcpy(buffer, line.c_str());
+		disk->Write(file, buffer, line.length()); //!= line.size()+1) // +1 for ASCIIZ, test required!
+//		{
+//			std::cout << "$$Failed to wite data data to file." << std::endl;
+//		}
+	//}
 
 	if (disk->Close(file.get_name()))						// Close file handle
 	{
@@ -219,7 +222,7 @@ void UI::typeFile(std::string const& aLine)
 	string buff;
 	buff = disk->Read(file.get_name());
 
-    std::cout << buff;
+    std::cout << buff << endl;
 
 
 	if (disk->Close(file.get_name()))					// Close file
