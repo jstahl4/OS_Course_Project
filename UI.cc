@@ -122,16 +122,13 @@ void UI::createFile(std::string const& aLine)
 // processing the deleteFile command.
 void UI::deleteFile(std::string const& aLine)
 {
-    if(disk->directory.get_File(aLine).get_name() == "default_name")
+	// parsing the command.
+	std::vector<std::string> cmd = parseLine(aLine);
+	if(!disk->directory.exists(cmd[1]))
     {
         cout << endl;
         return;
     }
-
-	// parsing the command.
-	std::vector<std::string> cmd = parseLine(aLine);
-	if(!disk->directory.exists(cmd[1]))
-		return;
 	if (cmd[0] != m_Commands[Commands::Delete])				// Command shall be create.
 	{
 		std::cout << "$$Invalid command." << std::endl;
