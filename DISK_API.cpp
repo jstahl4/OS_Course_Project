@@ -462,6 +462,7 @@ public:
             }
 
         }
+        ctr = 0;
         string buff = "";
         buff = newBuffer;
         if(buff == "")
