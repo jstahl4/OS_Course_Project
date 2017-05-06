@@ -1,6 +1,7 @@
-/*
-* Lead author: Tom Kueny
-* Contributor: James Stahl
+/**********************************************************************
+ * Lead Author: Tom Kueny - Team Coyote
+ * Additional author: James Stahl
+ **********************************************************************
 *
 * Taking inspiration from "diskprocess.cpp" with some modifications to the original methods of
 * File: diskprocess.cpp
@@ -26,6 +27,7 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <math.h>
 #include "Directory.h"
 
 #define SENTINEL 999

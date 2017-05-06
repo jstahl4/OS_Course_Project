@@ -1,12 +1,12 @@
 /**********************************************************************
  * James Stahl - Team Coyote
- ***********************************************************************
+ **********************************************************************
  *
  * File: Directory.cpp
  * Defines a directory system
  *
- * Implementation: linear list, with a hash function to determine where in the list
- * files are stored.
+ * Implementation: files stored in unsorted_list, as the order does not matter.
+ * Hash function implemented for constant-time access to any file.
  */
 
 #include<iostream>
