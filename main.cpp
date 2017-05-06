@@ -77,4 +77,7 @@ int main()
         cout << elem << endl;
     }
 
+    cout << endl << "trying to get a file that doesn't exist";
+    d->directory.get_File("asdf");
+
 }

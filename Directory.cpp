@@ -47,46 +47,53 @@ string * Directory::get_file_name_list()
 
 File Directory::get_File(string name)
 {
+	File * ret = new File();
+    unordered_set<File, file_hasher, file_comparator>::iterator found = files.find(name);
 
-	unordered_set<File, file_hasher, file_comparator>::iterator found = files.find(name);
-	return *found;
+    if(found == files.end())
+    {
+        cerr << "File named " << name << " not found. Returning default file object.";
+    } else
+    {
+        *ret = *found;
+    }
 
-
-	// note: possibly delete below, from previous implementation
-
-	/*
-	// found is an iterator, so if it is dereferenced, the address of the element can be
-	// obtained by using the & operator
-	//
-	// the goal is to return a pointer to the actual File object in the unordered_set, so
-	// it can be modified
-	File * file = &(*found);
-	*/
-}
-
-File Directory::get_File(File f)
-{
-	unordered_set<File, file_hasher, file_comparator>::iterator found = files.find(f.get_name());
-
-	return *found;
+	return *ret;
 }
 
 File Directory::get_File(int index)
 {
+    File ret("");
+    // iterate through all File objects and find the one with matching starting block
+    for(const auto & file: files)
+    {
+        if(file.get_starting_block() == index)
+        {
+            ret = file;
+            break;
+        }
+    }
 
-	File ret("");
-	// iterate through all File objects and find the one with matching starting block
-	for(const auto & file: files)
-	{
-		if(file.get_starting_block() == index)
-		{
-			ret = file;
-			break;		
-		}
-	}
-
-	return ret;
+    return ret;
 }
+
+File Directory::get_File(File f)
+{
+    File * ret = new File();
+    unordered_set<File, file_hasher, file_comparator>::iterator found = files.find(f.get_name());
+
+    if(found == files.end())
+    {
+        cerr << "File named " << f.get_name() << " not found. Returning default file object.";
+    } else
+    {
+        *ret = *found;
+    }
+
+    return *ret;
+}
+
+
 
 // destructor
 Directory::~Directory()
