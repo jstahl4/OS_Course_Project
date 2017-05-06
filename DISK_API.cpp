@@ -433,7 +433,7 @@ public:
         File fileObj = directory.get_File(fileName);
         int starter = fileObj.get_starting_block();
         static int ctr = 0;
-        char* newBuffer;
+        char* newBuffer = new char;
 
         for(int i = 0; i < fileObj.get_size(); i++){
             BlockType* tempBuffer = new BlockType;
@@ -450,7 +450,7 @@ public:
             }
         }
         string buff;
-        buff = string(newBuffer);
+        buff = newBuffer;
 
         return buff;
     }
