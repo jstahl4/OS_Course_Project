@@ -68,7 +68,7 @@ int main()
     cout << "Actually attempting to read this time...\n";
     string readBuffer = d->Read("TESTFILE.txt");
 
-    cout << readBuffer.c_str();
+    cout << readBuffer << endl;
 
 
 }
