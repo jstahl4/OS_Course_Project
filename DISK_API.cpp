@@ -121,8 +121,6 @@ public:
         if (offset < 0 || offset >= numBlocks)
         {
             cerr << "DISK: Block number is outside bounds\n";
-
-
             return -1;
         }
         if (buffer->blockSize != blockSize)
@@ -380,7 +378,20 @@ public:
 
         // remove file from directory
         directory.remove_file(aFileName);
+
+        // automatically compact disk after deletion
+        this->compact();
         return true;
+    }
+
+    /* When Delete() is used, compact() must be called after to avoid fragmentation.
+     * This method calls the two sequentially. compact() cannot be called within
+     * Delete() because compact() uses Delete(), creating an infinite loop
+     */
+    void Delete_and_compact(const string & file_name)
+    {
+        Delete(file_name);
+        this->compact();
     }
 
     File Open(std::string const &aFileName)
@@ -406,7 +417,7 @@ public:
         static int ctr = 0;
         char* newBuffer;
 
-        for(int i = 0; i < fileObj.get_block_size(); i++){
+        for(int i = 0; i < fileObj.get_size(); i++){
             BlockType* tempBuffer = new BlockType;
             ReadDisk(starter, tempBuffer);
             starter++;

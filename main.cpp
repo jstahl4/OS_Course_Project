@@ -70,6 +70,6 @@ int main()
          << (string) d->disk[3]->data << endl;
     cout << "Actually attempting to read this time...\n";
     char* readBuffer = d->Read("TESTFILE.txt");
-    cout << (string) readBuffer << endl;
+    cout << readBuffer << endl;
 
 }
