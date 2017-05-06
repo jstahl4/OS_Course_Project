@@ -70,5 +70,11 @@ int main()
 
     cout << readBuffer;
 
+    vector<string> list = d->List();
+    cout << endl;
+    for(const auto & elem: list)
+    {
+        cout << elem << endl;
+    }
 
 }

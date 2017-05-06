@@ -462,21 +462,45 @@ public:
         int s = f.get_block_size();
         return s;
     }
+
+//    vector<string> List()
+//    {
+//        vector<string> ret;
+//        string* fileNames = directory.get_file_name_list();
+//        cout << fileNames << endl;
+//
+//        for(int x = 0; x < sizeof(fileNames)/ sizeof(fileNames[0]); x++){
+//
+//            string fileAndSizeCombo = "\t";
+//            fileAndSizeCombo += fileNames[x] + "\t\t\t";
+//            File obj = directory.get_File(fileNames[x]);
+//            fileAndSizeCombo += obj.get_block_size();
+//            ret.push_back(fileAndSizeCombo);
+//        }
+//
+//        return ret;
+//
+//    }
+
     vector<string> List()
     {
+        // vector to be returned
         vector<string> ret;
-        string* fileNames = directory.get_file_name_list();
-        cout << fileNames << endl;
 
-        for(int x = 0; x < sizeof(fileNames)/ sizeof(fileNames[0]); x++){
+        // obtain list of files from the directory
+        unordered_set<File, file_hasher, file_comparator> list
+                = this->directory.get_file_list();
 
-            string fileAndSizeCombo = "\t";
-            fileAndSizeCombo += fileNames[x] + "\t\t\t";
-            File obj = directory.get_File(fileNames[x]);
-            fileAndSizeCombo += obj.get_block_size();
-            ret.push_back(fileAndSizeCombo);
+        // store file_name, size tuples as one tabbed string in ret
+        string tuple;
+        for(const auto & file: list)
+        {
+            tuple = file.get_name() + "\t\t" + to_string(file.get_size());
+            ret.push_back(tuple);
         }
 
+        return ret;
     }
+
 };
 

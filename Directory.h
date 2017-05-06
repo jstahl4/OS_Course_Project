@@ -58,7 +58,7 @@ public:
 
     unordered_set<File, file_hasher, file_comparator> get_file_list() const;
 
-    string *get_file_name_list();
+    string * get_file_name_list();
 
     File get_File(string);
 
