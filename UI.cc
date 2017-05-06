@@ -32,7 +32,7 @@ UI::~UI()
 }
 
 
-int UI::run(Disk * disk)
+int UI::run()
 {
 	for (;;)							// run forever - if not type EXIT
 	{
