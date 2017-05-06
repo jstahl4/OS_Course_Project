@@ -473,7 +473,7 @@ public:
         return s;
     }
 
-    vector<string> List()
+    vector<string> List_strings()
     {
         // vector to be returned
         vector<string> ret;
@@ -491,6 +491,11 @@ public:
         }
 
         return ret;
+    }
+
+    unordered_set<File, file_hasher, file_comparator> List_Files()
+    {
+        return directory.get_file_list();
     }
 
 };

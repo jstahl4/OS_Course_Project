@@ -1,11 +1,13 @@
 /**********************************************************************
- * Asif Rahman - Team Coyote
+ * Lead Author: Asif Rahman - Team Coyote
+ * Additional Authors: Tom Kueny, James Stahl
  **********************************************************************/
 
 #include <iostream>
 #include <sstream>
 #include <iterator>
 #include <cstring>
+#include <iomanip>
 #include "UI.h"
 
 // Construct UI class.
@@ -174,7 +176,7 @@ void UI::editFile(std::string const& aLine)
 		string s = file.get_name();
 		if (disk->Write(file, buffer) != line.size()+1) // +1 for ASCIIZ, test required!
 		{
-			std::cout << "$$Failed to wite data data to file." << std::endl;
+			std::cout << "$$Failed to write data data to file." << std::endl;
 			break;
 		}
 	}
@@ -235,18 +237,19 @@ void UI::typeFile(std::string const& aLine)
 // print the directory list.
 void UI::dir() const
 {
-	std::vector<std::string> l = disk->List();									// Get the directory list from ATOS-FS.
-	std::cout << "\tATOS-FS Directory Listing." << std::endl;						// Directory content header
-	std::cout << "\tFILENAME\t\tSIZE(blks)" << std::endl;
-	for (auto const& iT : l)
+	//std::vector<std::string> l = disk->List();									// Get the directory list from ATOS-FS.
+	unordered_set<File, file_hasher, file_comparator> l = disk->List_Files();
+	std::cout << setw(40) << "ATOS-FS Directory Listing." << std::endl;						// Directory content header
+	std::cout << setw(40) << "FILENAME" << setw(20) << "SIZE(blks)" << std::endl;
+	for (auto const& file: l)
 	{
-		std::cout << "\t" << iT << std::endl;	// print rows.
+		cout << setw(40) << file.get_name() << setw(20) << file.get_size() << endl;	// print rows.
 	}
 
 	// calculate total space used and output free space
 	int sum = disk->directory.calculate_total_blocks();
 	int free = disk->numBlocks - sum;
-	std::cout << "\tFREE SPACE " << free << " blks" << std::endl;
+	std::cout << setw(40) << "FREE SPACE " << free << " blks" << std::endl;
 }
 
 // Test it all ATOS-FS function.
