@@ -16,7 +16,7 @@ public:
 	UI();
 	~UI();
 
-	int run();
+	int run(Disk *);
 
 private:
 	Commands					getCommand(std::string const& aLine) const;				// detetmine the command
@@ -31,5 +31,6 @@ private:
 private:
 	std::map<Commands, std::string>	m_Commands;											// Assign commands id to the word of commmands.
 	int								m_FileHandle;
+	Disk *							disk;
 };
 
