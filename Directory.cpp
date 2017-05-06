@@ -115,3 +115,15 @@ void Directory::remove_file(File f)
 {
 	files.erase(f.get_name());
 }
+
+// calculator
+int Directory::calculate_total_blocks()
+{
+    int sum = 0;
+    for(const auto & file: files)
+    {
+        sum += file.get_size();
+    }
+
+    return sum;
+}
