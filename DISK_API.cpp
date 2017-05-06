@@ -454,8 +454,12 @@ public:
     }
 
 
-int Stats(std::string const & /*aFileName*/)
-    { return 5; };
+int Stats(std::string const & aFileName)
+    {
+        File f = directory.get_File(aFileName);
+        int s = f.get_block_size();
+        return s;
+    }
 
     std::vector<std::string> List()
     {
