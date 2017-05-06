@@ -415,8 +415,8 @@ public:
      */
     void Delete_and_compact(const string & file_name)
     {
-        Delete(file_name);
-        this->compact();
+        if(Delete(file_name))
+            this->compact();
     }
 
     File Open(std::string const &aFileName)
@@ -440,6 +440,7 @@ public:
 
     string Read(string fileName, int numchards = 0, char *buffer = NULL)
     {
+
         File fileObj = directory.get_File(fileName);
         int starter = fileObj.get_starting_block();
         static int ctr = 0;
@@ -454,10 +455,12 @@ public:
                 j++;
 
             }
+
             for(int n = 0; n < j; n++){
                 newBuffer[ctr] = tempBuffer->data[n];
                 ctr++;
             }
+
         }
         string buff;
         buff = newBuffer;

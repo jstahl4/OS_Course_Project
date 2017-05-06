@@ -133,16 +133,11 @@ void UI::deleteFile(std::string const& aLine)
 		return;
 	}
 
-	if (disk->Delete(cmd[1]))						// Call ATOS-FS Delete file API
-	{
+	disk->Delete_and_compact(cmd[1]);						// Call ATOS-FS Delete file API
+
 		// API call succeeded.
 		std::cout << "$$" << cmd[1] << " file deleted." << std::endl;
-	}
-	else
-	{
-		// API call failed.
-		std::cout << "$$Failed to delete " << cmd[1] << " file." << std::endl;
-	}
+
 }
 
 // processing the editFile command.
@@ -225,7 +220,7 @@ void UI::typeFile(std::string const& aLine)
 
 	if (disk->Close(file.get_name()))					// Close file
 	{
-		// Successfully close
+//		disk->Write(file, file.get_data());
 	}
 	else
 	{
