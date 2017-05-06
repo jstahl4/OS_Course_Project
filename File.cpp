@@ -10,7 +10,11 @@ Additional Authors: Tom Kueny
 #define CHAR_SIZE 1
 
 int File::block_size = DEFAULT_BLOCK_SIZE;
+const string File::default_name=DEFAULT_NAME;
 
+const string File::get_default(){
+    return default_name;
+}
 File::File(std::string fileName)
 {
     data = NULL;

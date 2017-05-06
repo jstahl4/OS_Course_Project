@@ -30,6 +30,7 @@
 #include <math.h>
 #include "Directory.h"
 
+#pragma
 #define SENTINEL 999
 
 using namespace std;
