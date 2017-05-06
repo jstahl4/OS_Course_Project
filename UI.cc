@@ -208,7 +208,7 @@ void UI::typeFile(std::string const& aLine)
 	File file = disk->Open(cmd[1]);					// open file
 	if (file.get_name() == DEFAULT_NAME)
 	{
-		std::cout << "$$failed to open " << cmd[0] << " file";	// failed to open file
+		//std::cout << "$$failed to open " << cmd[0] << " file";	// failed to open file
 		return;
 	}
 

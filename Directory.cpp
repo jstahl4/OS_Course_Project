@@ -52,7 +52,7 @@ File Directory::get_File(string name)
 
     if(found == files.end())
     {
-        cerr << "File named " << name << " not found. Returning default file object.";
+        cerr << "File named " << name << " not found.";
     } else
     {
         *ret = *found;
@@ -84,7 +84,7 @@ File Directory::get_File(File f)
 
     if(found == files.end())
     {
-        cerr << "File named " << f.get_name() << " not found. Returning default file object.";
+        cerr << "File named " << f.get_name() << " not found.";
     } else
     {
         *ret = *found;
