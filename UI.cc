@@ -162,7 +162,7 @@ void UI::editFile(std::string const& aLine)
 	}
 
 	File file = disk->Open(cmd[1]);					// open file
-	if (file.get_name() == File::default_name)
+	if (file.get_name() == DEFAULT_NAME)
 	{
         // output to cerr already included in File::get_File() method
 		return;
@@ -209,7 +209,7 @@ void UI::typeFile(std::string const& aLine)
 	}
 
 	File file = disk->Open(cmd[1]);					// open file
-	if (file.get_name() == File::default_name)
+	if (file.get_name() == DEFAULT_NAME)
 	{
 		std::cout << "$$failed to open " << cmd[0] << " file";	// failed to open file
 		return;

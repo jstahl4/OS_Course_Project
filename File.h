@@ -8,7 +8,6 @@
 #define FILE_H
 
 #include <iostream>
-
 #define DEFAULT_NAME "default_name"
 
 using namespace std;
@@ -16,7 +15,7 @@ using namespace std;
 class File
 {
 public:
-    File(std::string fileName = default_name);
+    File(std::string fileName = DEFAULT_NAME);
 
     File(std::string fileName, int blockSize, char *buffer = NULL);
 
@@ -52,8 +51,6 @@ public:
 
     // calculators
     void calculate_size();
-
-    static const string default_name = DEFAULT_NAME;
 
 
 private:

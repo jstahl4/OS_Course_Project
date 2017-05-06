@@ -34,6 +34,8 @@
 
 using namespace std;
 
+#ifndef BLOCKTYPE
+#define BLOCKTYPE
 class BlockType
 {
 public:
@@ -52,6 +54,10 @@ public:
     { delete data; };
 };
 
+#endif
+
+#ifndef DISK
+#define DISK
 class Disk
 {
 //    private:
@@ -488,3 +494,4 @@ public:
 
 };
 
+#endif
