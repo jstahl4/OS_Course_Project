@@ -68,7 +68,7 @@ int main()
     cout << "Actually attempting to read this time...\n";
     string readBuffer = d->Read("TESTFILE.txt");
 
-    cout << readBuffer;
+    cout << readBuffer << endl;
 
     vector<string> list = d->List();
     cout << endl;

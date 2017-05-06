@@ -21,7 +21,7 @@ int main()
 	UI ui;
 
 	// start UI - run from the main thread.
-	int res = ui.run(disk);
+	int res = ui.run(ui.disk);
 
 	// release resources (filesystem)
 	// ...
