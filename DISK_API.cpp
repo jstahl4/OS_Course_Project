@@ -422,8 +422,7 @@ public:
     File Open(std::string const &aFileName)
     {
         File obj = directory.get_File(aFileName);
-        if (obj.get_name() == aFileName)
-            return directory.get_File(aFileName);
+        return obj;
 
     }
 
